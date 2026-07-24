@@ -1,0 +1,512 @@
+{
+  "General Other Services": [
+    {
+      "text": "HOME",
+      "url": "General Other Services/HOME/index.php",
+      "external_url": "https://doulf.in/"
+    },
+    {
+      "text": "ARCHIVES",
+      "url": "General Other Services/ARCHIVES/index.php",
+      "external_url": "https://doulf.in/jobpage/"
+    },
+    {
+      "text": "WHATSAPP",
+      "url": "General Other Services/WHATSAPP/index.php",
+      "external_url": "https://www.whatsapp.com/channel/0029Va9fcofDp2QEoSv5nY2i"
+    },
+    {
+      "text": "HOME1",
+      "url": "General Other Services/HOME1/index.php",
+      "external_url": "https://doulf.in/1793-2/"
+    },
+    {
+      "text": "PSI ADMIT CARD",
+      "url": "General Other Services/PSI ADMIT CARD/index.php",
+      "external_url": "https://cetonline.karnataka.gov.in/examcenter_2024/forms/hallticket.aspx"
+    },
+    {
+      "text": "Grame 1 Apply",
+      "url": "General Other Services/Grame 1 Apply/index.php",
+      "external_url": "https://kal-mys.gramaone.karnataka.gov.in/index.php/applicant-registration-initial-step"
+    },
+    {
+      "text": "Guarantee Scheme",
+      "url": "General Other Services/Guarantee Scheme/index.php",
+      "external_url": "https://sevasindhugs.karnataka.gov.in/"
+    },
+    {
+      "text": "login",
+      "url": "General Other Services/login/index.php",
+      "external_url": "https://rationcard.doulf.in/"
+    },
+    {
+      "text": "Karnataka Govt 2 Citizens link",
+      "url": "General Other Services/Karnataka Govt 2 Citizens link/index.php",
+      "external_url": "https://karnataka.gov.in/g2c/en"
+    },
+    {
+      "text": "Govt Loans",
+      "url": "General Other Services/Govt Loans/index.php",
+      "external_url": "https://doulf.in/all-community-loans/"
+    },
+    {
+      "text": "Find Family ID Number",
+      "url": "General Other Services/Find Family ID Number/index.php",
+      "external_url": "https://kutumba.karnataka.gov.in/mykutumba/MISReport/KnowYourFamilyID"
+    },
+    {
+      "text": "SECUGEN RD",
+      "url": "General Other Services/SECUGEN RD/index.php",
+      "external_url": "https://secugenindia.in/rdstatus/rdstatus.html"
+    },
+    {
+      "text": "PM KISSAN REG",
+      "url": "General Other Services/PM KISSAN REG/index.php",
+      "external_url": "https://pmkisan.gov.in/"
+    },
+    {
+      "text": "UMID CARD RAILWAYS",
+      "url": "General Other Services/UMID CARD RAILWAYS/index.php",
+      "external_url": "https://umid.digitalir.in/web/"
+    },
+    {
+      "text": "GOVT 2 CITIZEN",
+      "url": "General Other Services/GOVT 2 CITIZEN/index.php",
+      "external_url": "https://karnataka.gov.in/g2c/en"
+    },
+    {
+      "text": "FIND RC DETAILS",
+      "url": "General Other Services/FIND RC DETAILS/index.php",
+      "external_url": "https://mahitikanaja.karnataka.gov.in/FCS/MyRationCard?ServiceId=1036&amp;Type=TABLE&amp;DepartmentId=1010"
+    },
+    {
+      "text": "fruits ID",
+      "url": "General Other Services/fruits ID/index.php",
+      "external_url": "https://fruitspmk.karnataka.gov.in/MISReport/GetDetailsByAadhaar.aspx"
+    },
+    {
+      "text": "HSRP",
+      "url": "General Other Services/HSRP/index.php",
+      "external_url": "https://www.siam.in/hrspsubmit.aspx?mpgid=91&amp;pgidtrail=91"
+    },
+    {
+      "text": "RTO",
+      "url": "General Other Services/RTO/index.php",
+      "external_url": "https://sarathi.parivahan.gov.in/sarathiservice/stateSelection.do"
+    },
+    {
+      "text": "AB-ABHA CARD 2",
+      "url": "General Other Services/AB-ABHA CARD 2/index.php",
+      "external_url": "https://healthid.ndhm.gov.in/register"
+    },
+    {
+      "text": "SHOLARSHIPS MISC",
+      "url": "General Other Services/SHOLARSHIPS MISC/index.php",
+      "external_url": "https://doulf.in/scholarship/"
+    },
+    {
+      "text": "AB-ARK CARD 1",
+      "url": "General Other Services/AB-ARK CARD 1/index.php",
+      "external_url": "https://beneficiary.nha.gov.in/"
+    },
+    {
+      "text": "PM KISSAN STATUS",
+      "url": "General Other Services/PM KISSAN STATUS/index.php",
+      "external_url": "https://pmkisan.gov.in/BeneficiaryStatus.aspx"
+    },
+    {
+      "text": "KISSAN E-KYC",
+      "url": "General Other Services/KISSAN E-KYC/index.php",
+      "external_url": "https://exlink.pmkisan.gov.in/aadharekyc.aspx"
+    },
+    {
+      "text": "UNIVERSITIES LINKS",
+      "url": "General Other Services/UNIVERSITIES LINKS/index.php",
+      "external_url": "https://ekannada.karnataka.gov.in/importantlinks_kn.html"
+    }
+  ],
+  "Jobs": [
+    {
+      "text": "Anganwadi Job",
+      "url": "Jobs/Anganwadi Job/index.php",
+      "external_url": "https://karnemakaone.kar.nic.in/abcd/ApplicationForm_JA_org.aspx"
+    },
+    {
+      "text": "Jobs karnataka",
+      "url": "Jobs/Jobs karnataka/index.php",
+      "external_url": "https://doulf.in/jobpage/"
+    },
+    {
+      "text": "MANGERA JOB CARD",
+      "url": "Jobs/MANGERA JOB CARD/index.php",
+      "external_url": "https://mnregaweb4.nic.in/netnrega/workers/wrkinfo.aspx"
+    }
+  ],
+  "Ration Card Services": [
+    {
+      "text": "New Ration Card Application",
+      "url": "Ration Card Services/New Ration Card Application/index.php",
+      "external_url": "https://ahara.kar.nic.in/public_new_rc/"
+    },
+    {
+      "text": "Ration Card Status",
+      "url": "Ration Card Services/Ration Card Status/index.php",
+      "external_url": "https://ahara.karnataka.gov.in/fcs_verify_mser/main.aspx"
+    },
+    {
+      "text": "Find Ration Card Number",
+      "url": "Ration Card Services/Find Ration Card Number/index.php",
+      "external_url": "https://ahara.kar.nic.in/WebForms/Show_RationCard.aspx"
+    },
+    {
+      "text": "Ration Card Details",
+      "url": "Ration Card Services/Ration Card Details/index.php",
+      "external_url": "https://mahitikanaja.karnataka.gov.in/FCS/MyRationCard?ServiceId=1036&amp;Type=TABLE&amp;DepartmentId=1010"
+    },
+    {
+      "text": "find Ration Card Number",
+      "url": "Ration Card Services/find Ration Card Number/index.php",
+      "external_url": "https://ahara.kar.nic.in/WebForms/Show_RationCard.aspx"
+    }
+  ],
+  "Certificates & Other Govt": [
+    {
+      "text": "Birth/Death Certificate",
+      "url": "Certificates & Other Govt/BirthDeath Certificate/index.php",
+      "external_url": "https://ejanma.karnataka.gov.in/frmBirthDeathSearch.aspx"
+    },
+    {
+      "text": "CERTIFICATE VERIFICATION",
+      "url": "Certificates & Other Govt/CERTIFICATE VERIFICATION/index.php",
+      "external_url": "https://ajsk.karnataka.gov.in/nkcv/"
+    }
+  ],
+  "Student & Scholarship": [
+    {
+      "text": "SSP Scholarship",
+      "url": "Student & Scholarship/SSP Scholarship/index.php",
+      "external_url": "https://ssp.postmatric.karnataka.gov.in/"
+    },
+    {
+      "text": "ST Students Prize Money",
+      "url": "Student & Scholarship/ST Students Prize Money/index.php",
+      "external_url": "https://twd.karnataka.gov.in/TWPostPrizemoney/Home.aspx?ReturnUrl=%2fswprizemoney%2f"
+    },
+    {
+      "text": "NATIONAL SCHOLARSHIP",
+      "url": "Student & Scholarship/NATIONAL SCHOLARSHIP/index.php",
+      "external_url": "https://scholarships.gov.in/"
+    },
+    {
+      "text": "STATE SCHOLARSHIP",
+      "url": "Student & Scholarship/STATE SCHOLARSHIP/index.php",
+      "external_url": "https://ssp.postmatric.karnataka.gov.in/"
+    },
+    {
+      "text": "CET KARNATAKA",
+      "url": "Student & Scholarship/CET KARNATAKA/index.php",
+      "external_url": "https://cetonline.karnataka.gov.in/kea/"
+    },
+    {
+      "text": "CBSE RESULTS",
+      "url": "Student & Scholarship/CBSE RESULTS/index.php",
+      "external_url": "https://results.cbse.nic.in/"
+    },
+    {
+      "text": "STUDENTS LINK",
+      "url": "Student & Scholarship/STUDENTS LINK/index.php",
+      "external_url": "https://doulf.in/student-links/"
+    },
+    {
+      "text": "SSLC RESULTS",
+      "url": "Student & Scholarship/SSLC RESULTS/index.php",
+      "external_url": "https://karresults.nic.in/"
+    },
+    {
+      "text": "KAR Results",
+      "url": "Student & Scholarship/KAR Results/index.php",
+      "external_url": "https://doulf.in/sSlc-puc-results/"
+    },
+    {
+      "text": "SSP SCHOLARSHIP",
+      "url": "Student & Scholarship/SSP SCHOLARSHIP/index.php",
+      "external_url": "https://ssp.postmatric.karnataka.gov.in/"
+    },
+    {
+      "text": "KUD Results",
+      "url": "Student & Scholarship/KUD Results/index.php",
+      "external_url": "https://kud.ac.in/results.php"
+    }
+  ],
+  "Aadhaar Services": [
+    {
+      "text": "Aadhar Download 1",
+      "url": "Aadhaar Services/Aadhar Download 1/index.php",
+      "external_url": "https://myaadhaar.uidai.gov.in/"
+    },
+    {
+      "text": "Aadhar Download 2",
+      "url": "Aadhaar Services/Aadhar Download 2/index.php",
+      "external_url": "https://myaadhaar.uidai.gov.in/genricDownloadAadhaar"
+    },
+    {
+      "text": "PAN AADHAR LINK",
+      "url": "Aadhaar Services/PAN AADHAR LINK/index.php",
+      "external_url": "https://eportal.incometax.gov.in/iec/foservices/#/pre-login/bl-link-aadhaar"
+    },
+    {
+      "text": "Aadhar bank A/C seeding",
+      "url": "Aadhaar Services/Aadhar bank AC seeding/index.php",
+      "external_url": "https://resident.uidai.gov.in/bank-mapper"
+    },
+    {
+      "text": "AADHAR DOWNLOAD 2",
+      "url": "Aadhaar Services/AADHAR DOWNLOAD 2/index.php",
+      "external_url": "https://eaadhaar.uidai.gov.in/#/"
+    },
+    {
+      "text": "AADHAR DOWNLOAD 1",
+      "url": "Aadhaar Services/AADHAR DOWNLOAD 1/index.php",
+      "external_url": "https://myaadhaar.uidai.gov.in/"
+    }
+  ],
+  "Jana Seva Kendra": [
+    {
+      "text": "CSC Login",
+      "url": "Jana Seva Kendra/CSC Login/index.php",
+      "external_url": "https://digitalseva.csc.gov.in/"
+    },
+    {
+      "text": "Seva Sindhu Login",
+      "url": "Jana Seva Kendra/Seva Sindhu Login/index.php",
+      "external_url": "https://sevasindhuservices.karnataka.gov.in/"
+    },
+    {
+      "text": "seva sindhu",
+      "url": "Jana Seva Kendra/seva sindhu/index.php",
+      "external_url": "https://sevasindhuservices.karnataka.gov.in/"
+    },
+    {
+      "text": "NADAKACHERI PRINT",
+      "url": "Jana Seva Kendra/NADAKACHERI PRINT/index.php",
+      "external_url": "https://ajsk.karnataka.gov.in/NK5_Online/CertificatePrinting/RePrintCertificatesShow"
+    },
+    {
+      "text": "NADAKACHERI STATUS",
+      "url": "Jana Seva Kendra/NADAKACHERI STATUS/index.php",
+      "external_url": "https://ajsk.karnataka.gov.in/NK_Status"
+    }
+  ],
+  "Utility & Bills": [
+    {
+      "text": "Recharge Plans",
+      "url": "Utility & Bills/Recharge Plans/index.php",
+      "external_url": "https://www.ireff.in/plans/jio/karnataka"
+    },
+    {
+      "text": "KEB BILLS",
+      "url": "Utility & Bills/KEB BILLS/index.php",
+      "external_url": "https://doulf.in/keb-links/"
+    },
+    {
+      "text": "WATER BILL BANGLORE",
+      "url": "Utility & Bills/WATER BILL BANGLORE/index.php",
+      "external_url": "https://paytm.com/water-bill-payment/bangalore-water-supply-and-sewerage-board-bwssb"
+    },
+    {
+      "text": "WATER BILLS",
+      "url": "Utility & Bills/WATER BILLS/index.php",
+      "external_url": "https://ipaymyinvoice.com/"
+    },
+    {
+      "text": "RECHARGE PLANS",
+      "url": "Utility & Bills/RECHARGE PLANS/index.php",
+      "external_url": "https://www.ireff.in/plans/jio/karnataka"
+    }
+  ],
+  "Land, Property & Vehicles": [
+    {
+      "text": "Ashraya Mane",
+      "url": "Land, Property & Vehicles/Ashraya Mane/index.php",
+      "external_url": "https://ashraya.karnataka.gov.in/cm_selection_flat/index.html"
+    },
+    {
+      "text": "Karanataka Housing Board",
+      "url": "Land, Property & Vehicles/Karanataka Housing Board/index.php",
+      "external_url": "https://khb.karnataka.gov.in/info-3/ONLINE+APPLICATION/en"
+    },
+    {
+      "text": "BHOOMI/RTC VIEW",
+      "url": "Land, Property & Vehicles/BHOOMIRTC VIEW/index.php",
+      "external_url": "https://landrecords.karnataka.gov.in/service2/RTC.aspx"
+    },
+    {
+      "text": "BHOOMI LOGIN",
+      "url": "Land, Property & Vehicles/BHOOMI LOGIN/index.php",
+      "external_url": "https://rtc.karnataka.gov.in/service78/Login.aspx"
+    },
+    {
+      "text": "KAR HOUSING BOARD",
+      "url": "Land, Property & Vehicles/KAR HOUSING BOARD/index.php",
+      "external_url": "https://khb.karnataka.gov.in/info-3/ONLINE+APPLICATION/en"
+    },
+    {
+      "text": "Ashraya Mane",
+      "url": "Land, Property & Vehicles/Ashraya Mane/index.php",
+      "external_url": "https://ashraya.karnataka.gov.in/cm_selection_flat/index.html"
+    },
+    {
+      "text": "HDMC PROPERTY TAX",
+      "url": "Land, Property & Vehicles/HDMC PROPERTY TAX/index.php",
+      "external_url": "https://hdmc.in/WebsiteHDMC/PropertySearch.aspx"
+    },
+    {
+      "text": "BBMP PROPERTY TAX",
+      "url": "Land, Property & Vehicles/BBMP PROPERTY TAX/index.php",
+      "external_url": "https://bbmptax.karnataka.gov.in/Default.aspx"
+    }
+  ],
+  "Jobs, Labor & Business": [
+    {
+      "text": "TRADE LICENSE",
+      "url": "Jobs, Labor & Business/TRADE LICENSE/index.php",
+      "external_url": "http://www.mrc.gov.in/TradeLicense/loadCreateApplicationForCitizen"
+    },
+    {
+      "text": "E-SHRAMA",
+      "url": "Jobs, Labor & Business/E-SHRAMA/index.php",
+      "external_url": "https://register.eshram.gov.in/#/user/self"
+    },
+    {
+      "text": "UDYAM APPLICATION",
+      "url": "Jobs, Labor & Business/UDYAM APPLICATION/index.php",
+      "external_url": "https://doulf.in/udyam-aadhar/"
+    },
+    {
+      "text": "UDYAM PRINT",
+      "url": "Jobs, Labor & Business/UDYAM PRINT/index.php",
+      "external_url": "https://udyamregistration.gov.in/Udyam_Login.aspx"
+    },
+    {
+      "text": "UDYAM MISC",
+      "url": "Jobs, Labor & Business/UDYAM MISC/index.php",
+      "external_url": "https://doulf.in/udyam-aadhar/"
+    },
+    {
+      "text": "FSSAI LICENSE",
+      "url": "Jobs, Labor & Business/FSSAI LICENSE/index.php",
+      "external_url": "https://foscos.fssai.gov.in/"
+    }
+  ],
+  "EPF & Pension": [
+    {
+      "text": "MAANDHAN YOJANA",
+      "url": "EPF & Pension/MAANDHAN YOJANA/index.php",
+      "external_url": "https://maandhan.in/"
+    },
+    {
+      "text": "EPFO LOGIN",
+      "url": "EPF & Pension/EPFO LOGIN/index.php",
+      "external_url": "https://unifiedportal-mem.epfindia.gov.in/memberinterface/"
+    },
+    {
+      "text": "EPFO PASSBOOK",
+      "url": "EPF & Pension/EPFO PASSBOOK/index.php",
+      "external_url": "https://passbook.epfindia.gov.in/MemberPassBook/Login"
+    },
+    {
+      "text": "EPFO PENSION",
+      "url": "EPF & Pension/EPFO PENSION/index.php",
+      "external_url": "https://mis.epfindia.gov.in/PensionPaymentEnquiry/pensionStatus.jsp"
+    }
+  ],
+  "Passport & Police": [
+    {
+      "text": "PASSPORT REG",
+      "url": "Passport & Police/PASSPORT REG/index.php",
+      "external_url": "https://portal2.passportindia.gov.in/AppOnlineProject/user/RegistrationBaseAction?request_locale=en"
+    },
+    {
+      "text": "KNOW YR POLICE ST",
+      "url": "Passport & Police/KNOW YR POLICE ST/index.php",
+      "external_url": "https://passportindia.gov.in/AppOnlineProject/online/LocatePoliceStation"
+    },
+    {
+      "text": "PASSPORT LOGIN",
+      "url": "Passport & Police/PASSPORT LOGIN/index.php",
+      "external_url": "https://portal2.passportindia.gov.in/AppOnlineProject/user/userLogin"
+    }
+  ],
+  "UDID & Disability": [
+    {
+      "text": "UDID NEW APP",
+      "url": "UDID & Disability/UDID NEW APP/index.php",
+      "external_url": "https://www.swavlambancard.gov.in/registration"
+    },
+    {
+      "text": "UDID LOST CARD",
+      "url": "UDID & Disability/UDID LOST CARD/index.php",
+      "external_url": "https://www.swavlambancard.gov.in/pwd/pwdlostcard"
+    },
+    {
+      "text": "UDID STATUS",
+      "url": "UDID & Disability/UDID STATUS/index.php",
+      "external_url": "https://www.swavlambancard.gov.in/track-your-application"
+    },
+    {
+      "text": "UDID CARD DOWNLOAD",
+      "url": "UDID & Disability/UDID CARD DOWNLOAD/index.php",
+      "external_url": "https://www.swavlambancard.gov.in/login"
+    }
+  ],
+  "Voter ID Services": [
+    {
+      "text": "VOTER SEARCH",
+      "url": "Voter ID Services/VOTER SEARCH/index.php",
+      "external_url": "https://electoralsearch.eci.gov.in/"
+    },
+    {
+      "text": "VOTER ID LOGIN",
+      "url": "Voter ID Services/VOTER ID LOGIN/index.php",
+      "external_url": "https://voters.eci.gov.in/"
+    },
+    {
+      "text": "HDMC TAX RECIEPT",
+      "url": "Voter ID Services/HDMC TAX RECIEPT/index.php",
+      "external_url": "http://117.247.189.20/ipg/payment_receipts.aspx"
+    }
+  ],
+  "PAN Card Services": [
+    {
+      "text": "PAN NSDL STATUS",
+      "url": "PAN Card Services/PAN NSDL STATUS/index.php",
+      "external_url": "https://tin.tin.nsdl.com/pantan/StatusTrack.html"
+    },
+    {
+      "text": "INSTANT E-PAN",
+      "url": "PAN Card Services/INSTANT E-PAN/index.php",
+      "external_url": "https://eportal.incometax.gov.in/iec/foservices/#/pre-login/instant-e-pan"
+    },
+    {
+      "text": "PAN CARD NSDL",
+      "url": "PAN Card Services/PAN CARD NSDL/index.php",
+      "external_url": "https://www.onlineservices.nsdl.com/paam/endUserRegisterContact.html"
+    },
+    {
+      "text": "PAN CARD UTI",
+      "url": "PAN Card Services/PAN CARD UTI/index.php",
+      "external_url": "https://www.pan.utiitsl.com/PAN/newA.html"
+    },
+    {
+      "text": "NSDL PAN DOWNLOAD",
+      "url": "PAN Card Services/NSDL PAN DOWNLOAD/index.php",
+      "external_url": "https://www.onlineservices.nsdl.com/paam/requestAndDownloadEPAN.html"
+    },
+    {
+      "text": "UTI STATUS",
+      "url": "PAN Card Services/UTI STATUS/index.php",
+      "external_url": "https://www.trackpan.utiitsl.com/PANONLINE/#forward"
+    }
+  ]
+}

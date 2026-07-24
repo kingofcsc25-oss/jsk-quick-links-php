@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nada Kacheri Portal</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Hide scrollbars on the wrapper */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- The user sees chrome-extension://[id]/index.html in the address bar -->
+    <!-- But the actual website is loaded seamlessly inside this iframe -->
+    <iframe src="https://nadakacheri.karnataka.gov.in/AJSK/" id="nk-iframe"></iframe>
+</body>
+</html>

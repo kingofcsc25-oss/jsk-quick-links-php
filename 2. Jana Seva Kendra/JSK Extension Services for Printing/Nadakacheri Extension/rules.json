@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        { "header": "X-Frame-Options", "operation": "remove" },
+        { "header": "x-frame-options", "operation": "remove" },
+        { "header": "Content-Security-Policy", "operation": "remove" },
+        { "header": "content-security-policy", "operation": "remove" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||karnataka.gov.in",
+      "resourceTypes": ["sub_frame", "main_frame", "xmlhttprequest"]
+    }
+  }
+]

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSK PAN Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="pdf-lib.min.js"></script>
+    <script src="qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text-main: #1f2937;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+            color: var(--text-main);
+        }
+        .title {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #d97706;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .general-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .general-link {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .general-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tab-btn {
+            background: white;
+            border: 1px solid #d1d5db;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            margin-top: 5px;
+            transition: background 0.2s;
+        }
+        .tab-btn:hover {
+            background: #f3f4f6;
+        }
+        .sub-menu {
+            display: none;
+            flex-direction: column;
+            padding-left: 20px;
+            margin-top: 10px;
+            gap: 5px;
+        }
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-sizing: border-box;
+            margin: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f3f4f6;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Left Status Container (Agent & Wallet) -->
+    <div id="statusContainer" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 12px; border: 1px solid #d1d5db; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div id="agentNameBadge" style="cursor: pointer; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #059669; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: flex-start; gap: 4px;" title="Click to edit Agent Profile">
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <span>👨‍💼</span> <span id="displayAgentName">Agent Name: Loading...</span>
+            </div>
+            <div style="font-size: 9px; color: #10b981; padding-left: 20px; font-weight: 600; text-transform: uppercase;" id="displayPanAgentId">PAN ID: Loading...</div>
+        </div>
+        <div id="walletBox" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: #9ca3af; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Wallet:</span>
+            <div style="color: #d97706; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+                <span>🪙</span> <span id="walletPoints">0</span> PTS
+            </div>
+        </div>
+    </div>
+
+    <h3 class="title" id="mainTitle">PAN Card Automation Services</h3>
+
+    <div class="general-grid" id="mainDashboard">
+        <!-- NEW PAN CARD -->
+        <div style="display: flex; flex-direction: column;">
+            <a href="#" class="general-link" id="btnToggleNewPan"
+                style="border-left: 4px solid #f59e0b;">
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 1.5rem; margin-right: 10px;">🆕</span> New Pan Card
+                </div>
+                <span>▼</span>
+            </a>
+            <div id="newPanSub" class="sub-menu">
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">NSDL</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">UTI</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">CSC NSDL</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">CSC UTI</a>
+            </div>
+        </div>
+
+        <!-- CORRECTION PAN CARD -->
+        <div style="display: flex; flex-direction: column;">
+            <a href="#" class="general-link" id="btnToggleCorrectionPan"
+                style="border-left: 4px solid #f59e0b;">
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 1.5rem; margin-right: 10px;">✏️</span> Correction Pan Card
+                </div>
+                <span>▼</span>
+            </a>
+            <div id="correctionPanSub" class="sub-menu">
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">NSDL</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">UTI</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">CSC NSDL</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">CSC UTI</a>
+            </div>
+        </div>
+
+        <!-- FIND PAN CARD (Coming Soon) -->
+        <div class="general-link" style="border-left: 4px solid #d1d5db; background: #f9fafb; cursor: not-allowed; color: #9ca3af;">
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 1.5rem; margin-right: 10px; filter: grayscale(100%);">🔍</span> Find Pan Card
+            </div>
+            <span style="font-size: 0.8rem; background: #e5e7eb; padding: 2px 8px; border-radius: 12px; color: #4b5563;">Coming Soon</span>
+        </div>
+
+        <!-- FIND PAN DETAILS (Coming Soon) -->
+        <div class="general-link" style="border-left: 4px solid #d1d5db; background: #f9fafb; cursor: not-allowed; color: #9ca3af;">
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 1.5rem; margin-right: 10px; filter: grayscale(100%);">📋</span> Find Pan Details
+            </div>
+            <span style="font-size: 0.8rem; background: #e5e7eb; padding: 2px 8px; border-radius: 12px; color: #4b5563;">Coming Soon</span>
+        </div>
+
+        <!-- MANUAL PAN CARD PRINT (Live Now) -->
+        <a href="#" class="general-link" id="btnOpenManualPrint"
+            style="border-left: 4px solid #10b981;">
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 1.5rem; margin-right: 10px;">🖨️</span> Manual Pan Card Print
+            </div>
+            <span style="font-size: 0.8rem; background: #d1fae5; padding: 2px 8px; border-radius: 12px; color: #065f46; border: 1px solid #34d399;">Live Now</span>
+        </a>
+
+        <!-- CHECK PAN STATUS -->
+        <div style="display: flex; flex-direction: column;">
+            <a href="#" class="general-link" id="btnToggleStatusPan"
+                style="border-left: 4px solid #f59e0b;">
+                <div style="display: flex; align-items: center;">
+                    <span style="font-size: 1.5rem; margin-right: 10px;">✅</span> Check the Pan Status
+                </div>
+                <span>▼</span>
+            </a>
+            <div id="statusPanSub" class="sub-menu">
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">Status Under NSDL</a>
+                <a href="https://www.incometax.gov.in/iec/foportal/" class="tab-btn">Status Under UTI</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAN Card Manual Print Modal -->
+    <div id="panManualPrintModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="btnCloseManualPrint">&times;</button>
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: #10b981; font-size: 1.5rem;">🖨️ Manual PAN Card Print</h3>
+            
+            <form id="panManualPrintForm">
+                
+                <div class="form-group">
+                    <label>1. PAN Card Number *</label>
+                    <input type="text" id="panNumber" required style="text-transform: uppercase;">
+                </div>
+
+                <div class="form-group">
+                    <label>2. Full Name *</label>
+                    <input type="text" id="fullName" required style="text-transform: uppercase;">
+                </div>
+
+                <div class="form-group">
+                    <label>3. Parent Name Option *</label>
+                    <div style="display: flex; gap: 20px; align-items: center; margin-top: 5px;">
+                        <label style="font-weight: normal; margin: 0;"><input type="radio" name="parentType" value="Father" checked style="width: auto;"> Father's Name</label>
+                        <label style="font-weight: normal; margin: 0;"><input type="radio" name="parentType" value="Mother" style="width: auto;"> Mother's Name</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>4. Parent Name *</label>
+                    <input type="text" id="parentName" required style="text-transform: uppercase;">
+                </div>
+
+                <div class="form-group">
+                    <label>5. Date of Birth *</label>
+                    <input type="date" id="panDOB" required>
+                </div>
+
+                <div class="form-group">
+                    <label>6. Gender *</label>
+                    <select id="panGender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Transgender">Transgender</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>7. Photo (JPG/PNG) *</label>
+                    <input type="file" id="panPhoto" accept="image/jpeg, image/png" required style="padding: 5px;">
+                </div>
+
+                <div class="form-group">
+                    <label>8. Signature (JPG/PNG) *</label>
+                    <input type="file" id="panSign" accept="image/jpeg, image/png" required style="padding: 5px;">
+                </div>
+
+                <button type="submit" class="tab-btn" id="generatePdfBtn" style="background: #10b981; color: white; border-color: #10b981; width: 100%; font-size: 1.1rem; padding: 12px; margin-top: 15px;">
+                    📄 Generate PDF
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="modal-overlay">
+        <div class="modal-content" style="height: 95vh; display: flex; flex-direction: column;">
+            <button class="modal-close" id="btnClosePdfPreview1">&times;</button>
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: #10b981; font-size: 1.5rem;">📄 PDF Preview</h3>
+            
+            <iframe id="pdfPreviewIframe" style="flex-grow: 1; width: 100%; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px;"></iframe>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="tab-btn" id="btnClosePdfPreview2" style="background: #ef4444; border-color: #ef4444; color: white;">Cancel</button>
+                <button type="button" class="tab-btn" id="pdfDownloadBtn" style="background: #10b981; border-color: #10b981; color: white;">⬇️ Download PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+    <!-- One Time Registration Panel -->
+    <div id="registration-panel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 100000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 20px; box-sizing: border-box;">
+        <div style="width: 100%; max-width: 380px; background: white; border-radius: 20px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);">
+            <div style="font-size: 32px; margin-bottom: 10px;">🏪</div>
+            <h2 style="color: #111827; font-size: 18px; margin-bottom: 6px; text-align: center;">One-Time Agent Registration</h2>
+            <p style="color: #6b7280; font-size: 12px; text-align: center; margin-bottom: 24px;">Please enter your details to configure this PAN Portal automation.</p>
+
+            <div style="width: 100%; text-align: left;">
+            <label for="regAgentName" style="color: #6b7280; font-size: 11px; display: block; margin-bottom: 4px;">Agent Name</label>
+            <input type="text" id="regAgentName" placeholder="Enter Agent Name" style="width: 100%; padding: 10px; border-radius: 8px; background: #f9fafb; border: 1px solid #d1d5db; color: #111827; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box;">
+            </div>
+
+            <div style="width: 100%; text-align: left;">
+            <label for="regAgentId" style="color: #6b7280; font-size: 11px; display: block; margin-bottom: 4px;">PAN Agent ID</label>
+            <input type="text" id="regAgentId" placeholder="Auto-generated if empty" style="width: 100%; padding: 10px; border-radius: 8px; background: #f9fafb; border: 1px solid #d1d5db; color: #111827; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box;">
+            </div>
+
+            <div style="width: 100%; text-align: left;">
+            <label for="regAgentMob" style="color: #6b7280; font-size: 11px; display: block; margin-bottom: 4px;">Agent Mobile Number</label>
+            <input type="tel" id="regAgentMob" placeholder="Enter 10-digit number" maxlength="10" style="width: 100%; padding: 10px; border-radius: 8px; background: #f9fafb; border: 1px solid #d1d5db; color: #111827; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box;">
+            </div>
+
+            <button id="btnSaveRegistration"  style="width: 100%; padding: 12px; font-size: 14px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Save & Configure Computer</button>
+        </div>
+    </div>
+
+    <!-- Registration Success Modal -->
+    <div id="reg-success-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 100001; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; text-align: center; backdrop-filter: blur(8px);">
+        <div style="width: 100%; max-width: 380px; background: white; border-radius: 20px; border: 1px solid #e5e7eb; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 24px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);">
+            <div style="font-size: 48px; margin-bottom: 15px; transform: scale(1); transition: transform 0.3s;" id="giftBoxIcon">🎁</div>
+            <h2 style="color: #10b981; font-size: 20px; margin-bottom: 10px; font-weight: 700;">Registration Successful!</h2>
+            <p style="color: #6b7280; font-size: 14px; margin-bottom: 24px;">You've received <b style="color: #3b82f6; font-size: 16px;">40 Welcome Points</b>.</p>
+            
+            <button id="btnContinueToDashboard"  style="width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">Continue to Dashboard</button>
+        </div>
+    </div>
+</body>
+</html>
+

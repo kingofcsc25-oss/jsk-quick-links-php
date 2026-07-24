@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "JSK PAN Card Automation",
+    "version": "1.0",
+    "description": "Automates PAN Card services for Jana Seva Kendra.",
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "tabs",
+        "storage"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://localhost/*",
+                "http://127.0.0.1/*",
+                "https://ahara.karnataka.gov.in/*",
+                "https://sarathi.parivahan.gov.in/*",
+                "https://ssp.karnataka.gov.in/*",
+                "*://*.incometax.gov.in/*"
+            ],
+            "js": ["content.js"],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["popup.html", "popup.js", "pdf-lib.min.js", "qrcode.min.js", "Emty PDF.pdf"],
+            "matches": ["*://*.incometax.gov.in/*"]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

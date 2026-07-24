@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nada Kacheri Automator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            width: 340px;
+            min-height: 520px;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at top right, #2c2214, #12121a);
+            color: #ffffff;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Subtle background watermark logo */
+        body::before {
+            content: "🏛️";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 150px;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #15151e; }
+        ::-webkit-scrollbar-thumb { background: #333344; border-radius: 3px; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .header-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 2px 5px rgba(255, 160, 0, 0.3));
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffa000, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .header-subtitle {
+            margin: 0;
+            font-size: 10px;
+            font-weight: 700;
+            color: #a0a0b0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-container {
+            background-color: rgba(30, 26, 20, 0.6);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 160, 0, 0.1);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #b0b0c0;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid #333344;
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.running {
+            border-color: rgba(255, 160, 0, 0.4);
+            color: #ffa000;
+            background-color: rgba(255, 160, 0, 0.1);
+        }
+
+        .status-badge.stopped {
+            border-color: rgba(255, 90, 90, 0.4);
+            color: #ff7070;
+            background-color: rgba(255, 90, 90, 0.1);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-badge.running .status-dot {
+            background-color: #ffa000;
+            box-shadow: 0 0 6px #ffa000;
+        }
+
+        .status-badge.stopped .status-dot {
+            background-color: #ff7070;
+            box-shadow: 0 0 6px #ff7070;
+        }
+
+        .inputs-card {
+            background-color: rgba(30, 30, 40, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #8c8c9e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #15151e;
+            border-radius: 8px;
+            border: 1px solid #2a2a36;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #ffa000;
+        }
+
+        .input-icon {
+            padding: 0 12px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        input, select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            padding: 12px 12px 12px 0;
+            outline: none;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 10px;
+            color: #8c8c9e;
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        option {
+            background-color: #1e1e28;
+            color: #ffffff;
+        }
+
+        .action-card {
+            background-color: rgba(30, 30, 40, 0.8);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 160, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: border-color 0.3s;
+        }
+
+        .action-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .step-circle {
+            width: 24px;
+            height: 24px;
+            background-color: #ffa000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #15151e;
+            flex-shrink: 0;
+            transition: background-color 0.3s;
+        }
+
+        .action-texts {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .action-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffa000;
+            transition: color 0.3s;
+        }
+
+        .action-subtitle {
+            font-size: 11px;
+            color: #8c8c9e;
+            line-height: 1.4;
+        }
+
+        .primary-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #ffa000, #ffc107);
+            color: #15151e;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 160, 0, 0.2);
+        }
+
+        .primary-btn:hover { opacity: 0.9; }
+        .primary-btn:active { transform: scale(0.98); }
+
+        .reset-btn {
+            width: 100%;
+            background-color: rgba(30, 30, 40, 0.8);
+            color: #a0a0b0;
+            border: 1px solid #333344;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reset-btn:hover {
+            background-color: #2a2a3a;
+            color: #ffffff;
+            border-color: #505060;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: #606070;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title-row">
+            <span class="header-icon">🏛️</span>
+            <h1 class="header-title">NADA KACHERI</h1>
+        </div>
+        <h2 class="header-subtitle">AJSK AUTOMATION ENGINE</h2>
+    </div>
+
+    <div class="status-container">
+        <span class="status-label">Engine Status</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div id="walletBalanceBadge" style="background: rgba(255, 160, 0, 0.1); border: 1px solid rgba(255, 160, 0, 0.3); color: #ffa000; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                <span style="font-size: 13px;">🪙</span> <span id="walletPoints">0</span> PTS
+            </div>
+            <div id="statusBadge" class="status-badge stopped">
+                <div class="status-dot"></div>
+                <span id="statusText">STOPPED</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration View -->
+    <div id="registrationView" style="display: none;">
+        <div class="inputs-card">
+            <h3 style="margin-top:0; color:#ffa000; font-size:14px; text-align:center; font-weight:800;">AGENT REGISTRATION</h3>
+            <p style="font-size:11px; color:#8c8c9e; text-align:center; margin-bottom:16px;">Please register your details. This is required only once.</p>
+            
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label class="input-label">AGENT NAME</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🧑‍💼</span>
+                    <input type="text" id="agentName" placeholder="Enter Agent Name">
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label class="input-label">MOB NO</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📱</span>
+                    <input type="text" id="agentMobNo" placeholder="Enter Mobile Number" maxlength="10">
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label class="input-label">RTC USER ID</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="rtcUserId" placeholder="Enter RTC User ID">
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label class="input-label">PASSWORD</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="rtcPassword" placeholder="Enter Password">
+                </div>
+            </div>
+
+            <button id="registerBtn" class="primary-btn">Register & Save</button>
+        </div>
+    </div>
+
+    <!-- Payment View -->
+    <div id="paymentView" style="display: none;">
+        <div class="inputs-card" style="text-align: center;">
+            <h3 style="margin-top:0; color:#ffa000; font-size:16px; font-weight:800; margin-bottom: 16px;">RECHARGE / ACTIVATION</h3>
+
+            <div class="input-group" id="welcomeCodeBlock" style="margin-bottom: 20px; text-align: left;">
+                <label class="input-label">HAVE A WELCOME CODE? (OPTIONAL)</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🎟️</span>
+                    <input type="text" id="welcomeCode" placeholder="Enter Welcome Code" style="text-transform: uppercase;">
+                </div>
+                <div style="font-size: 10px; color: #8c8c9e; margin-top: 6px;">
+                    Welcome code: <strong style="color: #ffa000; user-select: all;">WelcometoJSKFamily</strong> (Works only 1 time)
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 12px; text-align: left;">
+                <label class="input-label">ENTER AMOUNT (₹)</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">₹</span>
+                    <input type="number" id="extWalletAmount" placeholder="Amount" value="100">
+                </div>
+            </div>
+
+            <p id="extCalcPointsText" style="color: #ffc107; font-weight: bold; font-size: 15px; margin-bottom: 16px; text-align: center; text-shadow: 0 0 5px rgba(255, 193, 7, 0.5);">
+                You will get: 1000 Points
+            </p>
+            
+            <div style="background: white; padding: 10px; border-radius: 8px; display: inline-block; margin-bottom: 16px; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-left: auto; margin-right: auto;">
+                <img id="dynamicQRCode" src="" alt="UPI QR Code" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            
+            <div style="font-size: 14px; color: white; font-weight: bold; margin-bottom: 20px; background: rgba(255, 160, 0, 0.1); border: 1px dashed rgba(255, 160, 0, 0.5); padding: 10px; border-radius: 8px;">
+                UPI ID: <span style="color: #ffa000; user-select: all;">janaesevakendra@upi</span>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 16px; text-align: left;">
+                <label class="input-label">ENTER UTR / TRANSACTION ID</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🧾</span>
+                    <input type="text" id="utrNumber" placeholder="Enter 12 or 14-Digit UTR No" maxlength="14">
+                </div>
+            </div>
+
+            <button id="confirmPaymentBtn" class="primary-btn">Activate / Confirm Payment</button>
+        </div>
+    </div>
+
+    <!-- Main Engine View -->
+    <div id="mainEngineView">
+        <div class="inputs-card">
+            <div class="input-group">
+                <label class="input-label" style="display: flex; justify-content: space-between;">
+                    <span>SERVICE TYPE</span>
+                    <span id="verificationCostDisplay" style="color: #ff7070; font-weight: 800; font-size: 11px;">-10 PTS</span>
+                </label>
+                <div class="input-wrapper select-wrapper">
+                    <span class="input-icon">📄</span>
+                    <select id="serviceType" class="custom-select">
+                        <option value="Reprint Certificate">Reprint Certificate (10 Points)</option>
+                        <option value="Check Application Status">Check Application Status (2 Points)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group" id="ackNumberBlock" style="margin-top: 16px;">
+                <label class="input-label">ACKNOWLEDGEMENT NO (RD NO)</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🆔</span>
+                    <input type="text" id="ackNumber" placeholder="e.g. RD0039123456789" maxlength="20">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-card" id="actionCard">
+            <div class="action-header">
+                <div class="step-circle" id="stepCircle">1</div>
+                <div class="action-texts">
+                    <span class="action-title" id="actionTitle">Start Automation</span>
+                    <span class="action-subtitle" id="actionSubtitle">Initiate certificate reprint or status search on the Nada Kacheri Portal</span>
+                </div>
+            </div>
+            <button id="mainToggleBtn" class="primary-btn">Start Automation</button>
+        </div>
+
+        <button id="resetBtn" class="reset-btn">Reset Engine State</button>
+    </div>
+
+    <div class="footer">
+        NADA KACHERI AUTOMATION V1.0 • PREMIUM CONTROL SUITE
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
