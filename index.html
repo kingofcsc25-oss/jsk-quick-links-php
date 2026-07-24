@@ -2042,6 +2042,39 @@
         </div>
     </div>
 
+    <!-- WhatsApp Admin Contact -->
+    <div id="waFloatingBtn" onclick="openWaModal()" style="position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); cursor: pointer; z-index: 999; transition: transform 0.3s;">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </div>
+
+    <div id="waModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align: left; padding: 2rem;">
+            <button class="modal-close" onclick="closeWaModal()">&times;</button>
+            <h3 class="modal-title" style="margin-bottom: 1.5rem; text-align: center; color: #25d366; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                Contact Admin
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Your Name</label>
+                    <input type="text" id="waName" placeholder="Enter your name" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top: 5px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">WhatsApp No.</label>
+                    <input type="text" id="waNumber" placeholder="Enter your number" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top: 5px;">
+                </div>
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Type Problem / Complaint</label>
+                    <textarea id="waProblem" rows="4" placeholder="Describe your issue..." style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top: 5px; resize: none;"></textarea>
+                </div>
+                <button onclick="submitWaForm()" style="background: #25d366; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; gap: 10px; align-items: center;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    Send via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Job Listings Modal -->
     <div id="jobModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 700px; text-align: left; padding: 2rem;">
@@ -2585,22 +2618,29 @@
     async function fetchLiveUpdates() {
         try {
             const rssUrl = 'https://news.google.com/rss/search?q=Karnataka+Government+Jobs+notification&hl=en-IN&gl=IN&ceid=IN:en';
-            const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl);
+            const apiUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(rssUrl);
             
             const response = await fetch(apiUrl);
             const data = await response.json();
             
+            if (!data.contents) throw new Error("Empty RSS");
+            
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+            const items = xmlDoc.querySelectorAll("item");
+            
             let updates = [];
-            if (data && data.items && data.items.length > 0) {
-                updates = data.items.slice(0, 5).map(item => {
-                    let title = item.title.replace(/ - [^-]+$/, '');
-                    let dateObj = new Date(item.pubDate);
-                    let formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-                    return { title: title, link: item.link, date: formattedDate };
-                });
-            } else {
-                throw new Error("Empty RSS");
+            for (let i = 0; i < Math.min(5, items.length); i++) {
+                let item = items[i];
+                let title = item.querySelector("title").textContent.replace(/ - [^-]+$/, '');
+                let link = item.querySelector("link").textContent;
+                let pubDate = item.querySelector("pubDate").textContent;
+                
+                let dateObj = new Date(pubDate);
+                let formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                updates.push({ title: title, link: link, date: formattedDate });
             }
+            if (updates.length === 0) throw new Error("No items");
             renderUpdates(updates);
         } catch (error) {
             let defaultDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
@@ -2635,6 +2675,22 @@
                 `;
             });
         }
+    }
+    
+    function openWaModal() { document.getElementById('waModal').classList.add('active'); }
+    function closeWaModal() { document.getElementById('waModal').classList.remove('active'); }
+    function submitWaForm() {
+        const name = document.getElementById('waName').value;
+        const number = document.getElementById('waNumber').value;
+        const problem = document.getElementById('waProblem').value;
+        if(!name || !problem) return alert('Please enter your name and problem.');
+        
+        // ADMIN NUMBER: You can change this number directly below!
+        const adminNumber = '919000000000'; // Make sure to use country code (91) without '+' sign.
+        
+        const text = `*New Complaint / Query*\n\n*Name:* ${name}\n*WhatsApp No:* ${number}\n*Problem:* ${problem}`;
+        window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        closeWaModal();
     }
     
     document.addEventListener('DOMContentLoaded', fetchLiveUpdates);
