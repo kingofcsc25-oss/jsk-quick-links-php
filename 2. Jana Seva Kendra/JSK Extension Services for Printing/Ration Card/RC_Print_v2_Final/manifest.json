@@ -1,0 +1,69 @@
+{
+  "manifest_version": 3,
+  "name": "RC Print",
+  "version": "1.0",
+  "description": "Automates the Ration Card printing process.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "notifications",
+    "identity",
+    "identity.email"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "a1.css",
+        "b1.css",
+        "c1.css",
+        "a2.css",
+        "b2.css",
+        "c2.css",
+        "a5.css",
+        "b5.css",
+        "c5.css",
+        "a4.css",
+        "b4.css",
+        "c4.css",
+        "a3.css",
+        "b3.css",
+        "c3.css",
+        "popup.html",
+        "payu_checkout.html",
+        "payu_checkout.js",
+        "anna_bhagya.png",
+        "gok_logo.png"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data: https://chart.googleapis.com https://api.qrserver.com;"
+  }
+}

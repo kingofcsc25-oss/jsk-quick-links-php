@@ -692,7 +692,7 @@ if (!document.getElementById("jsk-ext-active")) {
             if (sessionStorage.getItem('rc_ext_active') !== 'true') return;
             const url = window.location.href.toLowerCase();
             const isAhara = url.includes('ahara.karnataka.gov.in');
-            const isJSK = url.includes('localhost') || url.includes('doulf.in');
+            const isJSK = url.includes('localhost') || url.includes('doulf.in') || url.includes('jsk-quick-links-php.vercel.app');
             if (!isAhara && !isJSK) return;
             if (url.includes('dup_rc_view.aspx')) return;
         }
