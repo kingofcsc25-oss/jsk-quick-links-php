@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "SSPCM",
+  "version": "1.1",
+  "action": {
+    "default_title": "Open SSPCM Control Panel"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://ssp.postmatric.karnataka.gov.in/*",
+        "*://ssp.prematric.karnataka.gov.in/*",
+        "*://ssp.karnataka.gov.in/*",
+        "*://*.karnataka.gov.in/*",
+        "http://localhost/*",
+        "http://localhost:8080/*",
+        "http://127.0.0.1/*",
+        "http://127.0.0.1:8080/*",
+        "*://*.vercel.app/*"
+      ],
+      "js": ["content.js", "points_updater.js"],
+      "all_frames": false,
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "identity",
+    "identity.email"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["alert_override.js", "payu_checkout.html", "payu_checkout.js", "popup.html", "popup.css", "popup.js"],
+      "matches": [
+        "*://*.karnataka.gov.in/*",
+        "http://localhost/*",
+        "http://localhost:8080/*",
+        "http://127.0.0.1/*",
+        "http://127.0.0.1:8080/*",
+        "*://*.vercel.app/*"
+      ]
+    }
+  ]
+}
