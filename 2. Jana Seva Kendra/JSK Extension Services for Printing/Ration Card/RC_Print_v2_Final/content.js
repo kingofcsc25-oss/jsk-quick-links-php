@@ -693,6 +693,12 @@ if (!document.getElementById("jsk-ext-active")) {
             const url = window.location.href.toLowerCase();
             const isAhara = url.includes('ahara.karnataka.gov.in');
             const isJSK = url.includes('localhost') || url.includes('doulf.in') || url.includes('jsk-quick-links-php.vercel.app');
+            if (isJSK && !document.getElementById('rc-print-extension-active')) {
+                let div = document.createElement('div');
+                div.id = 'rc-print-extension-active';
+                div.style.display = 'none';
+                document.documentElement.appendChild(div);
+            }
             if (!isAhara && !isJSK) return;
             if (url.includes('dup_rc_view.aspx')) return;
         }
