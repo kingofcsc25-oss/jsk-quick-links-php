@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DL Print Only</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            color: #ffffff;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .center-wrapper {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, #1a202c, #111827);
+            padding: 24px 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #60a5fa, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            margin: 4px 0 0 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .input-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: #111827;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            padding: 0 12px;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #8b5cf6;
+        }
+
+        input, select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f3f4f6;
+            font-size: 13px;
+            padding: 12px 0;
+            outline: none;
+            font-family: inherit;
+        }
+        
+        select option {
+            background-color: #1f2937;
+            color: #f3f4f6;
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .primary-btn:hover { opacity: 0.9; }
+        .primary-btn:active { transform: scale(0.98); }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .status-container {
+            width: 100%;
+            background-color: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: #8b5cf6;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .community-qr {
+            height: 24px;
+            width: 24px;
+            border-radius: 4px;
+            border: 1px solid #4b5563;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .community-qr-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #9ca3af;
+            font-size: 9px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+    <div id="companyHeader" style="position: fixed; top: 20px; left: 20px; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(31, 41, 55, 0.9); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.4); backdrop-filter: blur(5px); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+          <span style="font-size: 13px; font-weight: 800; color: #8b5cf6; text-transform: uppercase; letter-spacing: 0.5px;">⬅️ GO Jsk Main Page</span>
+    </div>
+    
+    <div id="walletBadge" style="position: fixed; top: 20px; right: 20px; z-index: 10000; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); backdrop-filter: blur(5px); cursor: pointer; transition: transform 0.2s;">
+        <span style="font-size: 16px;">🪙</span> <span id="walletPoints">0</span> PTS
+    </div>
+    
+    <div id="agentNameBadge" style="position: fixed; top: 20px; right: 130px; z-index: 10000; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); color: #3b82f6; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; display: none; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); backdrop-filter: blur(5px); cursor: pointer;">
+        <span id="agentNameDisplay">AGENT</span> ✏️
+    </div>
+
+    <!-- Update Profile Modal -->
+    <div id="updateProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px);">
+        <div style="width: 100%; max-width: 380px; background: #070913; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; box-sizing: border-box; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);">
+            <div style="font-size: 32px; margin-bottom: 10px; text-align: center;">✏️</div>
+            <h2 style="color: #fff; font-size: 18px; margin-bottom: 24px; text-align: center;">Update Agent Profile</h2>
+            
+            <div class="input-group" style="width: 100%;">
+              <label for="updAgentName" style="color: #94a3b8; font-size: 11px;">Agent Name</label>
+              <input type="text" id="updAgentName" placeholder="Enter Agent Name" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
+            </div>
+
+            <div class="input-group" style="width: 100%;">
+              <label for="updAgentMob" style="color: #94a3b8; font-size: 11px;">Agent Mobile Number</label>
+              <input type="tel" id="updAgentMob" placeholder="Enter 10-digit number" maxlength="10" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 24px; outline: none; font-size: 13px;">
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button id="btnCancelUpdate" class="primary-btn" style="flex: 1; padding: 12px; font-size: 14px; background: #334155; color: white;">Cancel</button>
+                <button id="btnUpdateData" class="primary-btn" style="flex: 1; padding: 12px; font-size: 14px; background: linear-gradient(90deg, #10b981, #059669);">Update Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="center-wrapper">
+        <div class="header" id="popupHeader">
+            <h1>DL Print Only</h1>
+            <p>Document Printing Engine</p>
+        </div>
+
+        <div id="registrationView" class="card" style="display: none;">
+            <h3 style="margin-top:0; color:#3b82f6; font-size:14px; text-align:center; font-weight:800; margin-bottom: 5px;">AGENT REGISTRATION</h3>
+            <p style="font-size:11px; color:#9ca3af; text-align:center; margin-bottom:16px;">Please register your details. This is required only once.</p>
+            
+            <div id="chromeProfileBadge" style="display: none; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 8px; text-align: center; margin-bottom: 16px;">
+                <span style="font-size: 11px; font-weight: bold; color: #10b981;">✅ Chrome Profile: <span id="chromeProfileEmail"></span></span>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">AGENT NAME</label>
+                <div class="input-wrapper">
+                    <input type="text" id="agentName" placeholder="Enter Agent Name">
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">AGENT MOB NO</label>
+                <div class="input-wrapper">
+                    <input type="text" id="agentMobNo" placeholder="Enter Mobile Number" maxlength="10">
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">DISTRICT</label>
+                <div class="input-wrapper" style="padding-right: 12px; position: relative;">
+                    <select id="agentDist" style="appearance: none; cursor: pointer; width: 100%;">
+                        <option value="" disabled selected>Select District</option>
+                        <option value="Bagalkot">Bagalkot</option>
+                        <option value="Ballari">Ballari</option>
+                        <option value="Belagavi">Belagavi</option>
+                        <option value="Bengaluru Rural">Bengaluru Rural</option>
+                        <option value="Bengaluru Urban">Bengaluru Urban</option>
+                        <option value="Bidar">Bidar</option>
+                        <option value="Chamarajanagar">Chamarajanagar</option>
+                        <option value="Chikkaballapur">Chikkaballapur</option>
+                        <option value="Chikkamagaluru">Chikkamagaluru</option>
+                        <option value="Chitradurga">Chitradurga</option>
+                        <option value="Dakshina Kannada">Dakshina Kannada</option>
+                        <option value="Davanagere">Davanagere</option>
+                        <option value="Dharwad">Dharwad</option>
+                        <option value="Gadag">Gadag</option>
+                        <option value="Hassan">Hassan</option>
+                        <option value="Haveri">Haveri</option>
+                        <option value="Kalaburagi">Kalaburagi</option>
+                        <option value="Kodagu">Kodagu</option>
+                        <option value="Kolar">Kolar</option>
+                        <option value="Koppal">Koppal</option>
+                        <option value="Mandya">Mandya</option>
+                        <option value="Mysuru">Mysuru</option>
+                        <option value="Raichur">Raichur</option>
+                        <option value="Ramanagara">Ramanagara</option>
+                        <option value="Shivamogga">Shivamogga</option>
+                        <option value="Tumakuru">Tumakuru</option>
+                        <option value="Udupi">Udupi</option>
+                        <option value="Uttara Kannada">Uttara Kannada</option>
+                        <option value="Vijayanagara">Vijayanagara</option>
+                        <option value="Vijayapura">Vijayapura</option>
+                        <option value="Yadgir">Yadgir</option>
+                    </select>
+                    <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: #9ca3af; pointer-events: none;">▼</span>
+                </div>
+            </div>
+
+            <button id="registerBtn" class="primary-btn" style="background: linear-gradient(90deg, #10b981, #059669); margin-top: 8px;">Register & Save</button>
+        </div>
+
+        <div id="paymentView" class="card" style="display: none; text-align: center;">
+            <h3 style="margin-top:0; color:#8b5cf6; font-size:16px; font-weight:800; margin-bottom: 12px;">RECHARGE WALLET</h3>
+            
+            <div id="welcomeCodeContainer" class="input-group" style="text-align: left; background: rgba(139, 92, 246, 0.05); border: 1px dashed rgba(139, 92, 246, 0.3); padding: 12px; border-radius: 8px;">
+                <label class="input-label" style="color: #8b5cf6;">HAVE A WELCOME CODE? (OPTIONAL)</label>
+                <div class="input-wrapper" style="margin-top: 8px; background: rgba(0,0,0,0.2);">
+                    <input type="text" id="welcomeCode" placeholder="Enter Welcome Code" style="text-transform: uppercase;">
+                </div>
+                <div style="font-size: 10px; color: #9ca3af; margin-top: 8px;">
+                    Welcome code: <strong style="color: #10b981; user-select: all;">WelcometoJSKFamily</strong>
+                </div>
+            </div>
+
+            <p style="margin: 0; font-size: 11px; font-weight: 700; color: #f472b6; letter-spacing: 0.5px; margin-top: 10px;">🎉 Offer 1: Pay 500 or above to get 2X points!</p>
+            <p style="margin: 0; font-size: 11px; font-weight: 700; color: #f472b6; letter-spacing: 0.5px; margin-top: 4px;">🚀 Offer 2: Pay 1000 or above to get 4X points!</p>
+
+            <div class="input-group" style="margin-top: 16px;">
+                <label class="input-label">ENTER AMOUNT (₹)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="extWalletAmount" placeholder="100" min="100" value="100">
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 12px 0;">
+                <span style="font-size: 14px; font-weight: 800; color: #0ea5e9;">You will get: <span id="extCalculatedPoints">100</span> Points</span>
+            </div>
+            
+            <div style="display: none; background: white; padding: 10px; border-radius: 8px; margin-bottom: 16px; width: 140px; height: 140px; align-items: center; justify-content: center; margin-left: auto; margin-right: auto;">
+                <img id="dynamicQRCode" src="upi-qr.png" alt="UPI QR" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            
+            <div style="display: none; font-size: 13px; color: white; font-weight: bold; margin-bottom: 16px; background: rgba(139, 92, 246, 0.1); border: 1px dashed rgba(139, 92, 246, 0.5); padding: 8px; border-radius: 8px;">
+                UPI ID: <span style="color: #10b981; user-select: all;">janaesevakendra@upi</span>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button id="cancelPaymentBtn" class="primary-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); flex: 1; padding: 12px 5px; font-size: 11px; font-weight: bold; color: #fff;">Go Back</button>
+                <button id="payuPaymentBtn" class="primary-btn" style="background: linear-gradient(90deg, #3b82f6, #60a5fa); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); flex: 1; padding: 12px 5px; font-size: 11px;">Pay Instantly<br>(PayU)</button>
+            </div>
+        </div>
+
+        <div class="card" id="dlMainView" style="display: none; position: relative; overflow: hidden;">
+            <div id="loadingOverlay" style="display: none; flex-direction: column; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, #1a202c, #111827); z-index: 50;">
+                <div style="width: 100%; overflow: hidden; position: relative; height: 60px; display: flex; align-items: center;">
+                    <div style="font-size: 35px; position: absolute; animation: driveVehicle 2s ease-in-out infinite;">🚙</div>
+                    <div style="position: absolute; right: 30px; font-size: 35px;">🏢</div>
+                </div>
+                <h3 style="color: #60a5fa; margin-top: 15px; font-weight: bold; font-size: 16px; letter-spacing: 1px;">Routing to Parivahan...</h3>
+                <p style="color: #94a3b8; font-size: 11px; margin-top: 5px;">Vehicle is reaching destination</p>
+                <style>
+                    @keyframes driveVehicle {
+                        0% { left: 10px; opacity: 0; }
+                        15% { opacity: 1; }
+                        75% { left: calc(100% - 90px); opacity: 1; }
+                        100% { left: calc(100% - 70px); opacity: 0; }
+                    }
+                </style>
+            </div>
+            <div class="input-group" style="display: none;">
+                <label class="input-label">Document Type</label>
+                <div class="input-wrapper">
+                    <select id="docType">
+                        <option value="dl">Driving License (DL)</option>
+                        <option value="rc">Vehicle RC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group" id="stateInputGroup">
+                <label class="input-label">Select State</label>
+                <div class="input-wrapper">
+                    <select id="stateSearch">
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka" selected>Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group" id="numberInputGroup">
+                <label class="input-label" id="docNumberLabel">DL Number</label>
+                <div class="input-wrapper">
+                    <input type="text" id="docNumber" placeholder="Enter DL Number (e.g. KA01...)">
+                </div>
+            </div>
+
+            <div class="input-group" id="dobInputGroup">
+                <label class="input-label">Date of Birth</label>
+                <div class="input-wrapper">
+                    <input type="text" id="dobInput" placeholder="DD-MM-YYYY" maxlength="10">
+                </div>
+            </div>
+
+            <div class="input-group" id="captchaInputGroup" style="display: none; align-items: center;">
+                <label class="input-label">Enter Captcha</label>
+                <div class="captcha-wrapper" style="display: flex; gap: 10px; margin-bottom: 12px; justify-content: center;">
+                    <img id="captchaImage" src="" alt="Captcha" style="height: 50px; width: 150px; border-radius: 4px; border: 1px solid #334155; background: white; object-fit: contain;">
+                    <button id="refreshCaptchaBtn" style="padding: 0 16px; background: #334155; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 18px;">↻</button>
+                </div>
+                <div class="input-wrapper" style="width: 100%;">
+                    <input type="text" id="captchaInput" placeholder="Enter Captcha Code" style="text-align: center; font-size: 18px; letter-spacing: 2px;">
+                </div>
+            </div>
+
+            <button id="startBtn" class="primary-btn">Process</button>
+            <button id="homeBtn" class="primary-btn" style="background: rgba(255,255,255,0.05); color: #9ca3af; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; font-size: 12px; box-shadow: none;">Go to Home page</button>
+        </div>
+
+        <div class="footer" style="display: flex; flex-direction: column; gap: 6px; padding: 0 10px; margin-top: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #6b7280; font-size: 10px;">DL PRINT ONLY V1.0 • PREMIUM SUITE</span>
+                <button id="hardResetBtn" style="background: none; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 4px; padding: 2px 6px; font-size: 9px; cursor: pointer; font-weight: bold; transition: all 0.2s;">RESET ENGINE</button>
+            </div>
+            <div style="background: rgba(139, 92, 246, 0.08); border: 1px dashed rgba(139, 92, 246, 0.25); border-radius: 6px; padding: 5px 10px; text-align: center;">
+                <span style="color: #6b7280; font-size: 9px;">YOUR SYSTEM ID: </span><span id="systemIdDisplay" style="color: #8b5cf6; font-size: 9px; font-weight: 800; letter-spacing: 1px; user-select: all;">LOADING...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
