@@ -12,14 +12,20 @@ if (window.location.search.includes('rc_ext=true')) {
 }
 
 // Inject detection flag so JSK portal knows the extension is installed
-if (!document.getElementById("rc-print-extension-active")) {
-    let extFlag = document.createElement("div");
-    extFlag.id = "rc-print-extension-active";
-    extFlag.style.display = "none";
-    if (document.documentElement) {
-        document.documentElement.appendChild(extFlag);
+function injectRcExtensionFlag() {
+    if (!document.getElementById("rc-print-extension-active")) {
+        let extFlag = document.createElement("div");
+        extFlag.id = "rc-print-extension-active";
+        extFlag.style.display = "none";
+        if (document.body) {
+            document.body.appendChild(extFlag);
+        } else if (document.documentElement) {
+            document.documentElement.appendChild(extFlag);
+        }
     }
 }
+injectRcExtensionFlag();
+document.addEventListener('DOMContentLoaded', injectRcExtensionFlag);
 
 (function () {
     if (sessionStorage.getItem('rc_ext_active') !== 'true') return;
@@ -29,7 +35,42 @@ if (!document.getElementById("rc-print-extension-active")) {
         let textContent = document.documentElement ? document.documentElement.innerHTML.toLowerCase() : "";
         if (textContent.includes("invalid") && (textContent.includes("rc no") || textContent.includes("ration card"))) {
             errorObserver.disconnect();
-            window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+            
+            if (!window.rcErrorTriggered) {
+                window.rcErrorTriggered = true;
+                
+                // Force UI injection instantly if it hasn't happened yet
+                if (typeof applyHiderOverlay === 'function') {
+                    try { applyHiderOverlay(); } catch (e) {}
+                }
+                
+                let success = false;
+                try {
+                    if (window.top && window.top.rcUpdateLoadingScene) {
+                        let cancelBtn = window.top.document.getElementById('rc-hider-cancel-btn');
+                        if (cancelBtn) cancelBtn.style.display = 'none';
+                        window.top.rcUpdateLoadingScene('error', 'Invalid RC Number! Not found in database \u274C');
+                        success = true;
+                    }
+                } catch(e) {}
+                
+                if (!success && window.rcUpdateLoadingScene) {
+                    try {
+                        let cancelBtn = document.getElementById('rc-hider-cancel-btn');
+                        if (cancelBtn) cancelBtn.style.display = 'none';
+                        window.rcUpdateLoadingScene('error', 'Invalid RC Number! Not found in database \u274C');
+                        success = true;
+                    } catch(e) {}
+                }
+                
+                if (success) {
+                    setTimeout(() => {
+                        window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+                    }, 3000);
+                } else {
+                    window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+                }
+            }
         }
     });
     errorObserver.observe(document, { childList: true, subtree: true });
@@ -740,7 +781,7 @@ if (!document.getElementById("rc-print-extension-active")) {
         }
         
         if (event.data && event.data.action === "CLOSE_JSK_TAB") {
-            window.close();
+            window.location.href = "https://ahara.karnataka.gov.in/";
             return;
         }
 
@@ -853,7 +894,37 @@ if (!document.getElementById("rc-print-extension-active")) {
                 let pageHTML = document.documentElement.innerHTML.toLowerCase();
                 if ((pageHTML.includes('invalid') && pageHTML.includes('rc no')) ||
                     (pageHTML.includes('invalid') && pageHTML.includes('ration card'))) {
-                    window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+                    
+                    if (!window.rcErrorTriggered) {
+                        window.rcErrorTriggered = true;
+                        
+                        let success = false;
+                        try {
+                            if (window.top && window.top.rcUpdateLoadingScene) {
+                                let cancelBtn = window.top.document.getElementById('rc-hider-cancel-btn');
+                                if (cancelBtn) cancelBtn.style.display = 'none';
+                                window.top.rcUpdateLoadingScene('error', 'Invalid RC Number! Not found in database \u274C');
+                                success = true;
+                            }
+                        } catch(e) {}
+                        
+                        if (!success && window.rcUpdateLoadingScene) {
+                            try {
+                                let cancelBtn = document.getElementById('rc-hider-cancel-btn');
+                                if (cancelBtn) cancelBtn.style.display = 'none';
+                                window.rcUpdateLoadingScene('error', 'Invalid RC Number! Not found in database \u274C');
+                                success = true;
+                            } catch(e) {}
+                        }
+                        
+                        if (success) {
+                            setTimeout(() => {
+                                window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+                            }, 3000);
+                        } else {
+                            window.postMessage({ type: 'RC_STOP_AUTOMATION', saveError: true }, '*');
+                        }
+                    }
                     return;
                 }
 
@@ -1195,18 +1266,52 @@ if (!document.getElementById("rc-print-extension-active")) {
                         loader.style.top = '50%';
                         loader.style.left = '50%';
                         loader.style.transform = 'translate(-50%, -50%)';
-                        loader.style.zIndex = '999997'; // Below our popups (999999)
+                        loader.style.zIndex = '999997'; // Below
                         loader.innerHTML = `
-                        <div style="background: linear-gradient(145deg, #1e1e2d, #12121a); border: 1px solid rgba(144, 112, 255, 0.2); border-radius: 20px; padding: 40px; text-align: center; width: 450px; max-width: 90vw; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                        <div style="background: linear-gradient(145deg, #1e1e2d, #12121a); border: 1px solid rgba(144, 112, 255, 0.2); border-radius: 20px; padding: 40px; text-align: center; width: 450px; max-width: 90vw; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden;">
                             <h1 style="color: #00e090; font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 10px rgba(0, 224, 144, 0.3);">Jana E Seva Kendra</h1>
-                            <p style="color: #b070ff; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; margin: 0 0 35px 0; letter-spacing: 3px; text-transform: uppercase;">Work Smart • Earn More</p>
+                            <p style="color: #b070ff; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; margin: 0 0 25px 0; letter-spacing: 3px; text-transform: uppercase;">Work Smart • Earn More</p>
                             
-                            <div style="width: 70px; height: 70px; border: 4px solid rgba(144, 112, 255, 0.1); border-top: 4px solid #b070ff; border-left: 4px solid #00e090; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 25px auto; box-shadow: 0 0 20px rgba(144, 112, 255, 0.2);"></div>
-                            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+                            <div id="rc-animation-scene" style="height: 140px; position: relative; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; flex-direction: column; overflow: hidden;">
+                                
+                                <div id="scene-fetching" style="position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: drive 2s infinite linear; position: relative; z-index: 2;">&#x1F6F5;</div>
+                                    <div style="font-size: 30px; position: absolute; right: 30px; z-index: 1;">&#x1F3E1;</div>
+                                </div>
+
+                                <div id="scene-captcha" style="position: absolute; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: bounce 1s infinite alternate;">&#x1F575;&#xFE0F;&#x200D;&#x2642;&#xFE0F; &#x1F510;</div>
+                                </div>
+
+                                <div id="scene-otp" style="position: absolute; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: shake 1.5s infinite;">&#x1F4F1; &#x1F4AC;</div>
+                                </div>
+
+                                <div id="scene-complete" style="position: absolute; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: pop 0.5s ease-out forwards;">&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467;&#x200D;&#x1F466; &#x1F389;</div>
+                                </div>
+
+                                <div id="scene-cancel" style="position: absolute; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: walkAway 3s forwards;">&#x1F6B6;&#x200D;&#x2642;&#xFE0F; &#x1F622;</div>
+                                    <div style="font-size: 30px; position: absolute; left: 30px; opacity: 0.5;">&#x1F3E1;</div>
+                                </div>
+                                
+                                <div id="scene-error" style="position: absolute; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; flex-direction: column;">
+                                    <div style="font-size: 40px; animation: shake 1.5s infinite;">&#x1F937;&#x200D;&#x2642;&#xFE0F; &#x274C;</div>
+                                </div>
+                            </div>
                             
-                            <h2 style="color: #fff; font-family: 'Inter', sans-serif; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Automation Running...</h2>
+                            <style>
+                                @keyframes drive { 0% { transform: translateX(-150px); } 100% { transform: translateX(150px); } }
+                                @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+                                @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+                                @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+                                @keyframes walkAway { 0% { transform: translateX(50px) scaleX(-1); } 100% { transform: translateX(-150px) scaleX(-1); opacity: 0; } }
+                            </style>
                             
-                            <button id="rc-hider-cancel-btn" style="background: rgba(255, 60, 60, 0.1); border: 1px solid rgba(255, 60, 60, 0.3); color: #ff6060; padding: 10px 24px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 30px; transition: all 0.2s;">
+                            <h2 id="rc-status-text" style="color: #fff; font-family: 'Inter', sans-serif; margin: 0 0 20px 0; font-size: 16px; font-weight: 600; min-height: 40px; line-height: 1.4;">Agent traveling to village to fetch member data...</h2>
+                            
+                            <button id="rc-hider-cancel-btn" style="background: rgba(255, 60, 60, 0.1); border: 1px solid rgba(255, 60, 60, 0.3); color: #ff6060; padding: 10px 24px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.2s;">
                                 Cancel & Go Home
                             </button>
                             
@@ -1222,18 +1327,52 @@ if (!document.getElementById("rc-print-extension-active")) {
                         </div>
                     `;
                         doc.documentElement.appendChild(loader);
+
+                        // Expose function to update scene
+                        window.rcUpdateLoadingScene = function(sceneId, statusText) {
+                            try {
+                                let scenes = ['fetching', 'captcha', 'otp', 'complete', 'cancel', 'error'];
+                                scenes.forEach(s => {
+                                    let el = doc.getElementById('scene-' + s);
+                                    if (el) el.style.display = (s === sceneId) ? 'flex' : 'none';
+                                });
+                                let textEl = doc.getElementById('rc-status-text');
+                                if (textEl) textEl.innerText = statusText;
+                            } catch(e) {}
+                        };
+
+                        // Determine initial scene based on page content
+                        let pageText = doc.body ? doc.body.innerText.toLowerCase() : "";
+                        let initialScene = 'fetching';
+                        let initialText = 'Agent traveling to village to fetch member data...';
+                        
+                        if (pageText.includes('enter otp')) {
+                            initialScene = 'otp';
+                            initialText = 'Sending OTP... Please ask the member for the OTP on their phone.';
+                        } else if (pageText.includes('enter captcha')) {
+                            initialScene = 'captcha';
+                            initialText = 'Selecting member and verifying Captcha...';
+                        } else if (pageText.includes('view ration card details')) {
+                            initialScene = 'complete';
+                            initialText = 'Verification complete! Processing all family members...';
+                        }
+                        
+                        if (window.rcUpdateLoadingScene) {
+                            window.rcUpdateLoadingScene(initialScene, initialText);
+                        }
+
                         let cancelBtn = doc.getElementById('rc-hider-cancel-btn');
                         if (cancelBtn) {
                             cancelBtn.addEventListener('click', function () {
-                                chrome.storage.local.set({ 'rc_automation_status': 'stopped' }, () => {
-                                    chrome.storage.local.get(['rc_division'], function (res) {
-                                        if (res.rc_division) {
-                                            window.top.location.href = res.rc_division;
-                                        } else {
-                                            window.top.location.reload();
-                                        }
+                                cancelBtn.style.display = 'none'; // hide cancel button
+                                if (window.rcUpdateLoadingScene) {
+                                    window.rcUpdateLoadingScene('cancel', 'Automation cancelled. Going back home... \uD83D\uDE22');
+                                }
+                                setTimeout(() => {
+                                    chrome.storage.local.set({ 'rc_automation_status': 'stopped' }, () => {
+                                        window.top.location.href = 'https://ahara.karnataka.gov.in/';
                                     });
-                                });
+                                }, 3000); // 3 seconds for animation
                             });
                             cancelBtn.addEventListener('mouseover', function () {
                                 this.style.background = 'rgba(255, 60, 60, 0.2)';

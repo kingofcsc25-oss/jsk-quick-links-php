@@ -2299,28 +2299,61 @@
             <!-- RC Print Extension Warning -->
             <div id="ext-warning-message"
                 style="display: none; padding: 20px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; text-align: left; max-width: 600px; margin: 2rem auto;">
+                
+                <div style="text-align: right; margin-bottom: -20px; position: relative; z-index: 10;">
+                    <button onclick="toggleKannada()" id="lang-toggle-btn" style="background: #fbbf24; color: #78350f; border: none; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🗣️ ಕನ್ನಡದಲ್ಲಿ ಓದಿ</button>
+                </div>
+
                 <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;">⚠️</div>
-                <h4 style="color: #be123c; font-size: 1.2rem; margin-bottom: 10px; text-align: center;">RC Print
-                    Extension Not Detected!</h4>
-                <p style="color: #4c0519; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
-                    <strong>Dear user,</strong><br><br>
-                    Your Chrome browser does not have the required JSK Extension added.<br><br>
-                    Please <strong>Download the Extension</strong> by clicking the button below, extract the
-                    <code>.zip</code> file on your computer, and load the unpacked folder into your Chrome Extensions
-                    page (<i>chrome://extensions</i>). Once added, your services will work effortlessly!
-                </p>
+                
+                <!-- English Content -->
+                <div id="ext-warning-en">
+                    <h4 style="color: #be123c; font-size: 1.2rem; margin-bottom: 10px; text-align: center;">RC Print Extension Not Detected!</h4>
+                    <p style="color: #4c0519; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+                        <strong>Dear user,</strong><br><br>
+                        Your Chrome browser does not have the required JSK Extension added.<br><br>
+                        Please <strong>Download the Extension</strong> by clicking the button below, extract the
+                        <code>.zip</code> file on your computer, and load the unpacked folder into your Chrome Extensions
+                        page (<i>chrome://extensions</i>). Once added, your services will work effortlessly!
+                    </p>
+                </div>
+
+                <!-- Kannada Content -->
+                <div id="ext-warning-kn" style="display: none;">
+                    <h4 style="color: #be123c; font-size: 1.2rem; margin-bottom: 10px; text-align: center;">RC ಪ್ರಿಂಟ್ ಎಕ್ಸ್ಟೆನ್ಶನ್ ಕಂಡುಬಂದಿಲ್ಲ!</h4>
+                    <p style="color: #4c0519; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+                        <strong>ಆತ್ಮೀಯ ಬಳಕೆದಾರರೆ,</strong><br><br>
+                        ನಿಮ್ಮ ಕ್ರೋಮ್ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಅಗತ್ಯವಿರುವ JSK ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಅನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ.<br><br>
+                        ದಯವಿಟ್ಟು ಕೆಳಗಿನ ಬಟನ್ ಕ್ಲಿಕ್ ಮಾಡುವ ಮೂಲಕ <strong>ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</strong>, ನಿಮ್ಮ ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ <code>.zip</code> ಫೈಲ್ ಅನ್ನು ಎಕ್ಸ್‌ಟ್ರಾಕ್ಟ್ ಮಾಡಿ ಮತ್ತು ಅನ್‌ಪ್ಯಾಕ್ ಮಾಡಿದ ಫೋಲ್ಡರ್ ಅನ್ನು ನಿಮ್ಮ ಕ್ರೋಮ್ ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಪುಟಕ್ಕೆ (<i>chrome://extensions</i>) ಸೇರಿಸಿ. ಒಮ್ಮೆ ಸೇರಿಸಿದ ನಂತರ, ನಿಮ್ಮ ಸೇವೆಗಳು ಸರಾಗವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ!
+                    </p>
+                </div>
+
                 <div style="text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                    <div style="display: flex; gap: 10px; justify-content: center;">
-                        <a href="2.%20Jana%20Seva%20Kendra/JSK%20Extension%20Services%20for%20Printing/Ration%20Card/RC_Print_Extension.zip"
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <a href="RC_Print_Extension.zip"
                             download="RC_Print_Extension.zip"
-                            class="tab-btn active">⬇️ Download Extension (.zip)</a>
+                            class="tab-btn active"><span id="btn-dl-text">⬇️ Download Extension (.zip)</span></a>
                         <button class="tab-btn"
-                            onclick="document.getElementById('ext-warning-message').style.display='none'; document.getElementById('ext-services-list').style.display='grid';">Go
-                            Back</button>
+                            onclick="document.getElementById('video-guide-modal').style.display='flex';"
+                            style="background: #ef4444; color: white; border-color: #ef4444;"><span id="btn-vid-text">🎥 Watch Video</span></button>
+                        <button class="tab-btn"
+                            onclick="document.getElementById('ext-warning-message').style.display='none'; document.getElementById('ext-services-list').style.display='grid';"><span id="btn-back-text">Go Back</span></button>
                     </div>
                     <button class="tab-btn" onclick="bypassExtensionCheck()"
                         style="background: #10b981; color: white; border-color: #10b981; margin-top: 10px; width: 100%; max-width: 400px; font-size: 0.95rem;">✅
-                        I already added this Extension on my Chrome Browser</button>
+                        <span id="btn-done-text">I already added this Extension on my Chrome Browser</span></button>
+                </div>
+            </div>
+
+            <!-- Video Guide Modal -->
+            <div id="video-guide-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+                <div style="background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 800px; position: relative;">
+                    <button onclick="document.getElementById('video-guide-modal').style.display='none'; document.getElementById('youtube-video-frame').src = document.getElementById('youtube-video-frame').src;" style="position: absolute; top: -15px; right: -15px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">✖</button>
+                    <h3 style="margin-top: 0; margin-bottom: 15px; color: #1e293b; font-family: 'Inter', sans-serif;">ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಅನ್ನು ಹೇಗೆ ಸೇರಿಸುವುದು (How to install extension)</h3>
+                    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px;">
+                        <iframe id="youtube-video-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/VIDEO_ID_HERE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p style="margin-top: 15px; color: #64748b; font-size: 0.9rem; margin-bottom: 0;"><strong>Note:</strong> Update the src attribute in index.html to your actual YouTube video link.</p>
                 </div>
             </div>
 
@@ -2413,6 +2446,20 @@
 
 </body>
 <script>
+let isKannada = false;
+function toggleKannada() {
+    isKannada = !isKannada;
+    document.getElementById('ext-warning-en').style.display = isKannada ? 'none' : 'block';
+    document.getElementById('ext-warning-kn').style.display = isKannada ? 'block' : 'none';
+    
+    document.getElementById('lang-toggle-btn').innerHTML = isKannada ? '🗣️ Read in English' : '🗣️ ಕನ್ನಡದಲ್ಲಿ ಓದಿ';
+    document.getElementById('btn-dl-text').innerHTML = isKannada ? '⬇️ ಎಕ್ಸ್‌ಟೆನ್ಶನ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ (.zip)' : '⬇️ Download Extension (.zip)';
+    document.getElementById('btn-vid-text').innerHTML = isKannada ? '🎥 ವೀಡಿಯೊ ನೋಡಿ' : '🎥 Watch Video';
+    document.getElementById('btn-back-text').innerHTML = isKannada ? 'ಹಿಂದೆ ಹೋಗಿ' : 'Go Back';
+    document.getElementById('btn-done-text').innerHTML = isKannada ? 'ನಾನು ಈಗಾಗಲೇ ಸೇರಿಸಿದ್ದೇನೆ' : 'I already added this Extension on my Chrome Browser';
+}
+</script>
+<script>
     function openTab(tabId) {
         // Hide all contents
         var contents = document.getElementsByClassName("tab-content");
@@ -2486,13 +2533,10 @@
     }
 
     function bypassExtensionCheck() {
-        if (document.getElementById('rc-print-extension-active')) {
-            document.getElementById('ext-warning-message').style.display = 'none';
-            document.getElementById('ext-services-list').style.display = 'grid';
-            if (pendingUrl && pendingUrl !== '#') window.open(pendingUrl, '_blank');
-        } else {
-            alert("The extension is not available in your computer or Chrome. Please download and install it first.");
-        }
+        // Fallback: If they click the bypass button, trust them and let them proceed
+        document.getElementById('ext-warning-message').style.display = 'none';
+        document.getElementById('ext-services-list').style.display = 'grid';
+        if (pendingUrl && pendingUrl !== '#') window.open(pendingUrl, '_blank');
     }
 
     let pendingSSPUrl = '';
@@ -2507,13 +2551,9 @@
     }
 
     function bypassSSPCheck() {
-        if (document.getElementById('sspcm-extension-active')) {
-            document.getElementById('ssp-warning-message').style.display = 'none';
-            document.getElementById('ext-services-list').style.display = 'grid';
-            if (pendingSSPUrl && pendingSSPUrl !== '#') window.location.href = pendingSSPUrl;
-        } else {
-            alert("The SSP Extension is not detected. Please download and install it first.");
-        }
+        document.getElementById('ssp-warning-message').style.display = 'none';
+        document.getElementById('ext-services-list').style.display = 'grid';
+        if (pendingSSPUrl && pendingSSPUrl !== '#') window.location.href = pendingSSPUrl;
     }
 
     let pendingDLUrl = '';
@@ -2528,13 +2568,9 @@
     }
 
     function bypassDLCheck() {
-        if (document.getElementById('dl-print-extension-active')) {
-            document.getElementById('dl-warning-message').style.display = 'none';
-            document.getElementById('ext-services-list').style.display = 'grid';
-            if (pendingDLUrl && pendingDLUrl !== '#') window.location.href = pendingDLUrl;
-        } else {
-            alert("The DL Print Extension is not detected. Please download and install it first.");
-        }
+        document.getElementById('dl-warning-message').style.display = 'none';
+        document.getElementById('ext-services-list').style.display = 'grid';
+        if (pendingDLUrl && pendingDLUrl !== '#') window.location.href = pendingDLUrl;
     }
 
     let pendingPANUrl = '';
@@ -2549,14 +2585,9 @@
     }
 
     function bypassPANCheck() {
-        if (document.getElementById('pan-extension-active')) {
-            // They have it installed now
-            document.getElementById('pan-warning-message').style.display = 'none';
-            document.getElementById('ext-services-list').style.display = 'grid';
-            if (pendingPANUrl && pendingPANUrl !== '#') window.location.href = pendingPANUrl;
-        } else {
-            alert("The PAN Card Extension is not detected. Please download and install it first.");
-        }
+        document.getElementById('pan-warning-message').style.display = 'none';
+        document.getElementById('ext-services-list').style.display = 'grid';
+        if (pendingPANUrl && pendingPANUrl !== '#') window.location.href = pendingPANUrl;
     }
 
     function closePANActionsModal() {
