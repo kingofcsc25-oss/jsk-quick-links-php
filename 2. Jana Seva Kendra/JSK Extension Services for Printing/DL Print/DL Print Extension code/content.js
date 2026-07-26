@@ -26,6 +26,67 @@
         throw new Error('Invalid execution context.');
     }
 })();
+// ── AUTO-RESTORE: runs on every page load in case local data was wiped ────────
+(function _autoRestoreOnLoad() {
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHePxZX-N9zhInQVQQWStSfYEv3tg9ptR4UORWGrIjZfbzL2AMw2kcgSDRK3pexCNS/exec";
+
+    chrome.storage.local.get(['agent_registered', 'agent_name'], function(localRes) {
+        // Only attempt restore if local data is missing
+        if (localRes.agent_registered && localRes.agent_name) return;
+
+        // Step 1: Try backend server using Google email
+        chrome.runtime.sendMessage({ action: 'getUserEmail' }, function(resp) {
+            const email = (resp && resp.email) ? resp.email.trim() : '';
+
+            if (email) {
+                chrome.runtime.sendMessage({
+                    action: 'apiCall',
+                    url: SCRIPT_URL,
+                    options: {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'GET_AGENT', email: email })
+                    }
+                }, function(apiRes) {
+                    if (apiRes && apiRes.success && apiRes.data && apiRes.data.agentName) {
+                        // ✅ Server has data - restore it
+                        const restored = {
+                            agent_name:        apiRes.data.agentName,
+                            agent_mob_no:      apiRes.data.mobile,
+                            agent_dist:        apiRes.data.district,
+                            wallet_balance:    apiRes.data.balance || 0,
+                            agent_registered:  true,
+                            payment_verified:  true,
+                            welcome_code_used: apiRes.data.welcomeClaimed || false,
+                            automation_status: 'stopped'
+                        };
+                        chrome.storage.local.set(restored);
+                        chrome.storage.sync.set(restored);
+                        console.log('✅ DL Print: Restored from server for', email);
+                    } else {
+                        _restoreFromSync(); // Step 2: Try sync as fallback
+                    }
+                });
+            } else {
+                _restoreFromSync(); // Step 2: No email - try sync
+            }
+        });
+    });
+
+    function _restoreFromSync() {
+        chrome.storage.sync.get(
+            ['agent_name', 'agent_mob_no', 'agent_dist', 'agent_registered',
+             'payment_verified', 'wallet_balance', 'welcome_code_used'],
+            function(syncRes) {
+                if (syncRes && syncRes.agent_registered) {
+                    chrome.storage.local.set(syncRes);
+                    console.log('✅ DL Print: Restored from sync storage for', syncRes.agent_name);
+                }
+            }
+        );
+    }
+})();
+
 let dlExtCheck = document.createElement('div');
 dlExtCheck.id = 'dl-print-extension-active';
 dlExtCheck.style.display = 'none';
@@ -356,6 +417,15 @@ function showExtensionUIIframe(force = false) {
                             // Update local storage to match the server exactly!
                             let serverBal = apiRes.data.balance || 0;
                             let serverWelcome = apiRes.data.welcomeClaimed;
+                            chrome.storage.sync.set({
+                                'agent_name': apiRes.data.agentName,
+                                'agent_mob_no': apiRes.data.mobile,
+                                'agent_dist': apiRes.data.district,
+                                'wallet_balance': serverBal,
+                                'agent_registered': true,
+                                'payment_verified': true,
+                                'welcome_code_used': serverWelcome
+                            });
                             chrome.storage.local.set({
                                 'agent_name': apiRes.data.agentName,
                                 'agent_mob_no': apiRes.data.mobile,
@@ -468,10 +538,7 @@ function showExtensionUIIframe(force = false) {
                             if (!chrome.runtime || !chrome.runtime.id) return;
                             try {
                                 let serverBal = (apiRes && apiRes.success && apiRes.data) ? apiRes.data.balance : 100;
-                                chrome.storage.local.set({ 
-                                    'agent_name': name, 'agent_mob_no': mob, 'agent_dist': dist, 'agent_registered': true,
-                                    'payment_verified': true, 'wallet_balance': serverBal, 'welcome_code_used': true
-                                }, function() {
+                                chrome.storage.sync.set({'agent_name': name, 'agent_mob_no': mob, 'agent_dist': dist, 'agent_registered': true, 'payment_verified': true, 'wallet_balance': serverBal, 'welcome_code_used': true}); chrome.storage.local.set({'agent_name': name, 'agent_mob_no': mob, 'agent_dist': dist, 'agent_registered': true, 'payment_verified': true, 'wallet_balance': serverBal, 'welcome_code_used': true}, function() {
                                     window.welcomeCodeAlreadyUsed = true;
                                     localStorage.setItem('jsk_dl_welcome_used_' + sysId, 'true');
                                     setTimeout(() => {
@@ -1665,5 +1732,7 @@ let maintenanceInterval = setInterval(() => {
 })();
 
 }
+
+
 
 

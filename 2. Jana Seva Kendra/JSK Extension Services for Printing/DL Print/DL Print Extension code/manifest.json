@@ -54,7 +54,6 @@
         "dl_print.js",
         "html2canvas.min.js",
         "jspdf.umd.min.js",
-        "dl_template.png",
         "payu_checkout.html",
         "payu_checkout.js"
       ],
