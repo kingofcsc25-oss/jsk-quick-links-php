@@ -293,7 +293,7 @@ function showExtensionUIIframe(force = false) {
             }
 
             let companyHeader = shadow.getElementById('companyHeader');
-            if (companyHeader) companyHeader.addEventListener('click', () => { window.location.href = 'https://jsk-quick-links-php.vercel.app/#'; });
+            if (companyHeader) companyHeader.addEventListener('click', () => { window.top.location.href = 'https://jsk-quick-links-php.vercel.app/#'; });
 
             let homeBtn = shadow.getElementById('homeBtn');
             if (homeBtn) homeBtn.addEventListener('click', () => { window.location.href = 'https://sarathi.parivahan.gov.in/sarathiservice/stateSelection.do'; });

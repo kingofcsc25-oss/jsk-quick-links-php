@@ -112,7 +112,7 @@ chrome.storage.local.get(['site_under_maintenance'], function(result) {
         }
 
         const companyHeader = document.getElementById('companyHeader');
-        if (companyHeader) companyHeader.addEventListener('click', () => { window.location.href = 'https://jsk-quick-links-php.vercel.app/#'; });
+        if (companyHeader) companyHeader.addEventListener('click', () => { chrome.tabs.create({ url: 'https://jsk-quick-links-php.vercel.app/#' }); });
 
         const homeBtn = document.getElementById('homeBtn');
         if (homeBtn) homeBtn.addEventListener('click', () => { window.location.href = 'https://sarathi.parivahan.gov.in/sarathiservice/stateSelection.do'; });
