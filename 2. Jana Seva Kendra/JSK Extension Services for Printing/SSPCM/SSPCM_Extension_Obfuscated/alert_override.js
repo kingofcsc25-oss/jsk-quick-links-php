@@ -1,1 +1,8 @@
-const originalAlert=window.alert;window.alert=function(e){if(!e||"string"!=typeof e||!e.toLowerCase().includes("successfully"))return originalAlert.call(window,e);console.log("SSP Auto-dismissed native alert:",e)};
+const originalAlert = window.alert;
+window.alert = function(msg) {
+  if (msg && typeof msg === 'string' && msg.toLowerCase().includes('successfully')) {
+    console.log('SSP Auto-dismissed native alert:', msg);
+    return;
+  }
+  return originalAlert.call(window, msg);
+};

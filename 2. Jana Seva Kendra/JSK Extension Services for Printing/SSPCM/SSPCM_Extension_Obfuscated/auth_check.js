@@ -1,1 +1,181 @@
-document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("chromeAuthStatus"),t=document.getElementById("email-lock-screen");document.querySelector(".glass-panel"),document.getElementById("registration-panel");if(!e)return;chrome.identity&&chrome.identity.getProfileUserInfo?chrome.identity.getProfileUserInfo({accountStatus:"ANY"},n=>{n&&n.email?(e.innerText="✅ Authenticated: "+n.email,e.style.color="#00e090",e.style.borderColor="rgba(0, 224, 144, 0.3)",e.style.background="rgba(0, 224, 144, 0.1)",t&&(t.style.display="none"),chrome.storage.local.set({ssp_google_profile:n.email}),chrome.storage.local.get(["ssp_agent_name"],e=>{e.ssp_agent_name||chrome.storage.sync.get(["ssp_agent_id","ssp_agent_rc_no","ssp_agent_name","ssp_agent_mob","ssp_agent_email","ssp_wallet_balance","ssp_payment_logs"],e=>{e.ssp_agent_name&&chrome.storage.local.set(e,()=>{alert("Welcome back Dear "+e.ssp_agent_name+"! Your memory has been successfully restored."),window.location.reload()})})})):(e.innerText="❌ Chrome Profile Not Found. Please Sign In.",e.style.color="#ff7070",e.style.borderColor="rgba(255, 112, 112, 0.4)",e.style.background="rgba(255, 112, 112, 0.1)",t&&(t.style.display="flex"))}):(e.innerText="❌ Chrome Identity API Not Available",t&&(t.style.display="flex"));const n=document.getElementById("btnRetryAuth");n&&n.addEventListener("click",()=>{window.location.reload()}),chrome.storage.local.get(["ssp_agent_id"],e=>{const t=document.getElementById("displaySspId");t&&e.ssp_agent_id&&(t.innerText="SSP ID: "+e.ssp_agent_id)});const a=document.getElementById("agentNameBadge");a&&a.addEventListener("click",()=>{chrome.storage.local.get(["ssp_agent_name","ssp_agent_mob","ssp_agent_email","ssp_agent_id"],e=>{const t=document.getElementById("updateProfileModal");t&&(t.style.display="flex",document.getElementById("updAgentName")&&(document.getElementById("updAgentName").value=e.ssp_agent_name||""),document.getElementById("updAgentMob")&&(document.getElementById("updAgentMob").value=e.ssp_agent_mob||""),document.getElementById("updAgentEmail")&&(document.getElementById("updAgentEmail").value=e.ssp_agent_email||""),document.getElementById("updAgentId")&&(document.getElementById("updAgentId").value=e.ssp_agent_id||""))})});const o=document.getElementById("btnCancelUpdate");o&&o.addEventListener("click",()=>{const e=document.getElementById("updateProfileModal");e&&(e.style.display="none")});const l=document.getElementById("btnUpdateData");l&&l.addEventListener("click",()=>{const e=document.getElementById("updAgentName")?document.getElementById("updAgentName").value.trim():"",t=document.getElementById("updAgentMob")?document.getElementById("updAgentMob").value.trim():"",n=document.getElementById("updAgentEmail")?document.getElementById("updAgentEmail").value.trim():"",a=document.getElementById("updAgentId")?document.getElementById("updAgentId").value.trim():"";e&&t?(l.innerText="Updating...",chrome.storage.local.get(["ssp_agent_rc_no","ssp_wallet_balance","ssp_payment_logs"],o=>{const l={ssp_agent_id:a||"SSP-"+Math.floor(1e3+9e3*Math.random()),ssp_agent_rc_no:o.ssp_agent_rc_no||"SSP"+Date.now().toString().slice(-4),ssp_agent_name:e,ssp_agent_mob:t,ssp_agent_email:n,ssp_wallet_balance:o.ssp_wallet_balance||0,ssp_payment_logs:o.ssp_payment_logs||[]};chrome.storage.local.set(l,()=>{chrome.storage.sync.set(l,()=>{window.location.reload()})})})):alert("Please fill in both Agent Name and Mobile Number!")});const s=document.getElementById("btnSaveRegistration");s&&s.addEventListener("click",()=>{const e=document.getElementById("regAgentName")?document.getElementById("regAgentName").value.trim():"",t=document.getElementById("regAgentMob")?document.getElementById("regAgentMob").value.trim():"",n=document.getElementById("regAgentEmail")?document.getElementById("regAgentEmail").value.trim():"";let a=document.getElementById("regAgentId")?document.getElementById("regAgentId").value.trim():"";if(!e||!t)return void alert("Please fill in both Agent Name and Mobile Number!");const o=s.innerText;s.innerText="Saving...",a||(a="SSP-"+Math.floor(1e3+9e3*Math.random()));const l={ssp_agent_id:a,ssp_agent_rc_no:"SSP"+Date.now().toString().slice(-4),ssp_agent_name:e,ssp_agent_mob:t,ssp_agent_email:n,ssp_wallet_balance:0,ssp_payment_logs:[]};chrome.storage.local.set(l,()=>{chrome.storage.sync.set(l,()=>{s.innerText=o;const e=document.getElementById("registration-panel");e&&(e.style.display="none"),window.location.reload()})})})});
+// auth_check.js
+// Handles Google Chrome Profile Login tracking on Popup Load
+
+document.addEventListener('DOMContentLoaded', () => {
+    const authStatusEl = document.getElementById('chromeAuthStatus');
+    const lockScreen = document.getElementById('email-lock-screen');
+    const mainUI = document.querySelector('.glass-panel');
+    const regPanel = document.getElementById('registration-panel');
+
+    if (!authStatusEl) return;
+
+    // Check Chrome Identity
+    if (chrome.identity && chrome.identity.getProfileUserInfo) {
+        chrome.identity.getProfileUserInfo({ accountStatus: 'ANY' }, (userInfo) => {
+            if (userInfo && userInfo.email) {
+                // Success: Signed in
+                authStatusEl.innerText = '✅ Authenticated: ' + userInfo.email;
+                authStatusEl.style.color = '#00e090';
+                authStatusEl.style.borderColor = 'rgba(0, 224, 144, 0.3)';
+                authStatusEl.style.background = 'rgba(0, 224, 144, 0.1)';
+                
+                // Hide Lock Screen just in case
+                if (lockScreen) lockScreen.style.display = 'none';
+
+                // Save to local storage for the background worker to use
+                chrome.storage.local.set({ ssp_google_profile: userInfo.email });
+                
+                // RESTORE MEMORY: Check if data is in sync but missing locally
+                chrome.storage.local.get(['ssp_agent_name'], (localData) => {
+                    if (!localData.ssp_agent_name) {
+                        chrome.storage.sync.get(['ssp_agent_id', 'ssp_agent_rc_no', 'ssp_agent_name', 'ssp_agent_mob', 'ssp_agent_email', 'ssp_wallet_balance', 'ssp_payment_logs'], (syncData) => {
+                            if (syncData.ssp_agent_name) {
+                                // Data found in sync! Restore it locally.
+                                chrome.storage.local.set(syncData, () => {
+                                    alert("Welcome back Dear " + syncData.ssp_agent_name + "! Your memory has been successfully restored.");
+                                    // Reload popup to apply restored data
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                    }
+                });
+                
+            } else {
+                // Fail: Not Signed In
+                authStatusEl.innerText = '❌ Chrome Profile Not Found. Please Sign In.';
+                authStatusEl.style.color = '#ff7070';
+                authStatusEl.style.borderColor = 'rgba(255, 112, 112, 0.4)';
+                authStatusEl.style.background = 'rgba(255, 112, 112, 0.1)';
+                
+                // Show Lock Screen Over Everything
+                if (lockScreen) {
+                    lockScreen.style.display = 'flex';
+                }
+            }
+        });
+    } else {
+        authStatusEl.innerText = '❌ Chrome Identity API Not Available';
+        if (lockScreen) {
+            lockScreen.style.display = 'flex';
+        }
+    }
+
+    const btnRetryAuth = document.getElementById('btnRetryAuth');
+    if (btnRetryAuth) {
+        btnRetryAuth.addEventListener('click', () => {
+            window.location.reload();
+        });
+    }
+
+    // Populate SSP ID in the top-left badge
+    chrome.storage.local.get(['ssp_agent_id'], (data) => {
+        const displaySspId = document.getElementById('displaySspId');
+        if (displaySspId && data.ssp_agent_id) {
+            displaySspId.innerText = 'SSP ID: ' + data.ssp_agent_id;
+        }
+    });
+
+    // EDIT PROFILE HANDLER
+    const agentNameBadge = document.getElementById('agentNameBadge');
+    if (agentNameBadge) {
+        agentNameBadge.addEventListener('click', () => {
+            chrome.storage.local.get(['ssp_agent_name', 'ssp_agent_mob', 'ssp_agent_email', 'ssp_agent_id'], (data) => {
+                const updateModal = document.getElementById('updateProfileModal');
+                if (updateModal) {
+                    updateModal.style.display = 'flex';
+                    
+                    if (document.getElementById('updAgentName')) document.getElementById('updAgentName').value = data.ssp_agent_name || '';
+                    if (document.getElementById('updAgentMob')) document.getElementById('updAgentMob').value = data.ssp_agent_mob || '';
+                    if (document.getElementById('updAgentEmail')) document.getElementById('updAgentEmail').value = data.ssp_agent_email || '';
+                    if (document.getElementById('updAgentId')) document.getElementById('updAgentId').value = data.ssp_agent_id || '';
+                }
+            });
+        });
+    }
+
+    const btnCancelUpdate = document.getElementById('btnCancelUpdate');
+    if (btnCancelUpdate) {
+        btnCancelUpdate.addEventListener('click', () => {
+            const updateModal = document.getElementById('updateProfileModal');
+            if (updateModal) updateModal.style.display = 'none';
+        });
+    }
+
+    const btnUpdateData = document.getElementById('btnUpdateData');
+    if (btnUpdateData) {
+        btnUpdateData.addEventListener('click', () => {
+            const agentName = document.getElementById('updAgentName') ? document.getElementById('updAgentName').value.trim() : '';
+            const agentMob = document.getElementById('updAgentMob') ? document.getElementById('updAgentMob').value.trim() : '';
+            const agentEmail = document.getElementById('updAgentEmail') ? document.getElementById('updAgentEmail').value.trim() : '';
+            const agentIdInput = document.getElementById('updAgentId') ? document.getElementById('updAgentId').value.trim() : '';
+            
+            if (!agentName || !agentMob) {
+                alert("Please fill in both Agent Name and Mobile Number!");
+                return;
+            }
+
+            btnUpdateData.innerText = "Updating...";
+            
+            chrome.storage.local.get(['ssp_agent_rc_no', 'ssp_wallet_balance', 'ssp_payment_logs'], (existingData) => {
+                const dataToSave = {
+                    ssp_agent_id: agentIdInput || "SSP-" + Math.floor(1000 + Math.random() * 9000),
+                    ssp_agent_rc_no: existingData.ssp_agent_rc_no || "SSP" + Date.now().toString().slice(-4),
+                    ssp_agent_name: agentName,
+                    ssp_agent_mob: agentMob,
+                    ssp_agent_email: agentEmail,
+                    ssp_wallet_balance: existingData.ssp_wallet_balance || 0,
+                    ssp_payment_logs: existingData.ssp_payment_logs || []
+                };
+
+                chrome.storage.local.set(dataToSave, () => {
+                    chrome.storage.sync.set(dataToSave, () => {
+                        window.location.reload();
+                    });
+                });
+            });
+        });
+    }
+
+    // REGISTRATION SAVE HANDLER
+    const btnSaveReg = document.getElementById('btnSaveRegistration');
+    if (btnSaveReg) {
+        btnSaveReg.addEventListener('click', () => {
+            const agentName = document.getElementById('regAgentName') ? document.getElementById('regAgentName').value.trim() : '';
+            const agentMob = document.getElementById('regAgentMob') ? document.getElementById('regAgentMob').value.trim() : '';
+            const agentEmail = document.getElementById('regAgentEmail') ? document.getElementById('regAgentEmail').value.trim() : '';
+            let agentIdInput = document.getElementById('regAgentId') ? document.getElementById('regAgentId').value.trim() : '';
+            
+            if (!agentName || !agentMob) {
+                alert("Please fill in both Agent Name and Mobile Number!");
+                return;
+            }
+
+            const btnOriginalText = btnSaveReg.innerText;
+            btnSaveReg.innerText = "Saving...";
+            
+            if (!agentIdInput) {
+                agentIdInput = "SSP-" + Math.floor(1000 + Math.random() * 9000);
+            }
+
+            const dataToSave = {
+                ssp_agent_id: agentIdInput,
+                ssp_agent_rc_no: "SSP" + Date.now().toString().slice(-4),
+                ssp_agent_name: agentName,
+                ssp_agent_mob: agentMob,
+                ssp_agent_email: agentEmail,
+                ssp_wallet_balance: 0,
+                ssp_payment_logs: []
+            };
+
+            chrome.storage.local.set(dataToSave, () => {
+                chrome.storage.sync.set(dataToSave, () => {
+                    btnSaveReg.innerText = btnOriginalText;
+                    const regPanel = document.getElementById('registration-panel');
+                    if (regPanel) regPanel.style.display = 'none';
+                    window.location.reload();
+                });
+            });
+        });
+    }
+});

@@ -123,6 +123,7 @@ if (window.location.search.includes('dl_ext=true')) {
                     district: res.agent_dist || "Unknown",
                     utr: res.pending_payu_txnid || "PAYU_UNKNOWN",
                     amount: amount,
+                    pointsToAdd: points,
                     welcomeCode: "PAYU_INSTANT",
                     systemId: "PAYU_AUTO"
                 })
@@ -149,6 +150,36 @@ if (window.location.search.includes('dl_ext=true')) {
 
 if (window.location.href.includes('dl-payu-success') || window.location.href.includes('dl-payu-failure')) {
     // If we are on a callback page, do not run the rest of the extension logic.
+    // Payment UI Override
+    const isFail = window.location.href.toLowerCase().includes('fail');
+    function overrideUI() {
+        document.documentElement.innerHTML = `
+            <head><title>Payment ${isFail ? 'Failed' : 'Successful'}</title></head>
+            <body style="background:#1e1e28; color:white; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; overflow:hidden;">
+                <div style="text-align:center; padding: 40px; background: rgba(30,30,40,0.8); border-radius: 16px; border: 1px solid ${isFail ? '#ff4d4d' : '#b070ff'}; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                    <div style="width: 60px; height: 60px; background: ${isFail ? '#ff4d4d' : '#b070ff'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        ${isFail 
+                            ? '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
+                            : '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+                        }
+                    </div>
+                    <h2 style="color:${isFail ? '#ff4d4d' : '#b070ff'}; margin-top:0;">Payment ${isFail ? 'Failed!' : 'Successful!'}</h2>
+                    <p style="color:#8c8c9e; font-size: 16px;">
+                        ${isFail 
+                            ? 'Unfortunately, your payment could not be completed.'
+                            : 'Thank you for your payment.<br>Your points are being added to your wallet.'
+                        }
+                    </p>
+                    <button onclick="window.close()" style="margin-top: 20px; padding: 10px 24px; background: ${isFail ? '#ff4d4d' : '#b070ff'}; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold;">Close Window</button>
+                </div>
+            </body>
+        `;
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', overrideUI);
+    } else {
+        overrideUI();
+    }
 } else {
 
 (function() {
@@ -1734,5 +1765,22 @@ let maintenanceInterval = setInterval(() => {
 }
 
 
+
+
+
+
+
+
+(function() {
+    function injectDetectionElement(id) {
+        if (document.getElementById(id)) return;
+        const el = document.createElement('div');
+        el.id = id;
+        el.style.display = 'none';
+        if (document.body) document.body.appendChild(el);
+        else document.addEventListener('DOMContentLoaded', () => { if (!document.getElementById(id)) document.body.appendChild(el); });
+    }
+    injectDetectionElement('dl-print-extension-active');
+})();
 
 
