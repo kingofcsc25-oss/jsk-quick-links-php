@@ -5,12 +5,29 @@
     // Override fetch globally to intercept API calls
     const origFetch = globalThis.fetch;
     if (origFetch) {
-        globalThis.fetch = function(url, options) {
+        globalThis.fetch = async function(url, options) {
             let finalUrl = url;
             if (typeof url === 'string' && url.includes('script.google.com/macros/s/')) {
                 finalUrl = NEW_URL;
             }
-            // Use .call explicitly instead of .apply with arguments (to bypass strict mode argument syncing bugs)
+            
+            // Inject mobile number into ADD_POINTS if missing
+            if (options && options.body && typeof options.body === 'string') {
+                try {
+                    let bodyObj = JSON.parse(options.body);
+                    if (bodyObj.type === 'ADD_POINTS' && !bodyObj.mobile) {
+                        let stored = await new Promise(resolve => {
+                            chrome.storage.local.get(['agent_mob_no'], resolve);
+                        });
+                        if (stored && stored.agent_mob_no) {
+                            bodyObj.mobile = stored.agent_mob_no;
+                            options.body = JSON.stringify(bodyObj);
+                        }
+                    }
+                } catch(e) {}
+            }
+            
+            // Use .call explicitly instead of .apply with arguments
             return origFetch.call(this, finalUrl, options);
         };
     }

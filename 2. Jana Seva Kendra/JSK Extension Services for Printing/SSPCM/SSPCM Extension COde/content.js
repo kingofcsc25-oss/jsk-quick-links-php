@@ -62,6 +62,36 @@
     // Payment UI Override
     if (document.referrer.includes('payu.in') || window.location.href.includes('payu-success') || window.location.href.includes('payu-fail')) {
         const isFail = window.location.href.toLowerCase().includes('fail');
+        
+        if (!isFail && window.location.href.includes('payu-success')) {
+            chrome.storage.local.get(['pending_payu_amount', 'wallet_balance', 'agent_mob_no', 'pending_payu_txnid'], function(res) {
+                const amount = parseFloat(res.pending_payu_amount) || 0;
+                let points = amount;
+                if (amount >= 200) { points = amount * 2; }
+                
+                if (amount > 0) {
+                    const newBalance = (parseFloat(res.wallet_balance) || 0) + points;
+                    
+                    fetch(NEW_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'ADD_POINTS',
+                            agentId: res.agent_mob_no,
+                            points: points,
+                            amountPaid: amount,
+                            txnid: res.pending_payu_txnid,
+                            extension: 'SSPCM'
+                        })
+                    }).then(r => r.json()).then(data => {
+                        if (data && data.success) {
+                            chrome.storage.local.set({ wallet_balance: newBalance, pending_payu_amount: 0 });
+                        }
+                    }).catch(e => console.error(e));
+                }
+            });
+        }
+
         function overrideUI() {
             document.documentElement.innerHTML = 
                 <head><title>Payment ${isFail ? 'Failed' : 'Successful'}</title></head>

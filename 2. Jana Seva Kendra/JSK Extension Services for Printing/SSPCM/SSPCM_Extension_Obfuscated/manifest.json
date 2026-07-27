@@ -34,6 +34,10 @@
     "identity",
     "identity.email"
   ],
+  "host_permissions": [
+    "https://script.google.com/*",
+    "*://*.karnataka.gov.in/*"
+  ],
   "web_accessible_resources": [
     {
       "resources": ["alert_override.js", "payu_checkout.html", "payu_checkout.js", "popup.html", "popup.css", "popup.js"],
