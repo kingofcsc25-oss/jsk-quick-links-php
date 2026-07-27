@@ -9,359 +9,165 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <!-- Company Header & QR -->
-  <div id="companyHeader" style="position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; background: rgba(15, 23, 42, 0.8); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.3); backdrop-filter: blur(5px);">
-      <div class="company-name" style="font-size: 13px; font-weight: 900; color: #818cf8; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">JANA SEVA KENDRA</div>
-      <div class="community-qr-wrapper" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; color: #94a3b8; font-size: 10px; font-weight: 600; margin-top: 4px;">
-          <span>COMMUNITY QR:</span>
-          <img id="communityQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://chat.whatsapp.com/CA4G8EOFRP91heRRxDT3cg" alt="QR" style="height: 60px; width: 60px; border-radius: 4px; border: 1px solid #475569; object-fit: cover; cursor: pointer;">
-      </div>
-  </div>
-
-  <!-- Full Page QR Modal -->
-  <div id="qrModalOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(8px);">
+  <!-- LEFT SIDEBAR (LIGHT MODE) -->
+  <div id="left-sidebar">
+    <div class="sidebar-top">
+      <img src="https://jsk-quick-links-php.vercel.app/logo.png" alt="Logo" onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=JSK&backgroundColor=2563eb&textColor=ffffff';"/>
+      <h2>Jana Seva Kendra</h2>
+      <p>Agent Automation Portal</p>
       
-      <!-- Top Left Company Name -->
-      <div style="position: absolute; top: 20px; left: 20px; font-size: 14px; font-weight: 900; color: #818cf8; text-transform: uppercase; letter-spacing: 1px; background: rgba(15, 23, 42, 0.9); padding: 12px 20px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.4); box-shadow: 0 4px 15px rgba(0,0,0,0.5);">JANA SEVA KENDRA</div>
-
-      <h2 style="color: #10b981; font-size: 16px; font-weight: 800; margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Join Community</h2>
-      
-      <!-- New Timer Display -->
-      <div id="qrTimerDisplay" style="display: none; font-size: 24px; font-weight: 800; color: #fca5a5; margin-bottom: 15px; font-variant-numeric: tabular-nums; background: rgba(239, 68, 68, 0.15); padding: 8px 24px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.3); letter-spacing: 2px;">01:00</div>
-
-      <!-- Main Content Row -->
-      <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 40px; width: 100%; max-width: 900px; flex-wrap: wrap;">
-          
-          <!-- New Yes/No Prompt (Hidden by Default, Left Side) -->
-          <div id="qrJoinPrompt" style="display: none; flex-direction: column; align-items: center; background: rgba(15, 23, 42, 0.95); padding: 20px 24px; border-radius: 16px; border: 1px solid rgba(99, 102, 241, 0.5); text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6); animation: ssp-cel-fadein 0.4s ease; min-width: 380px;">
-              
-              <!-- State 1: Question -->
-              <div id="qrPromptQuestion" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                  <h3 style="color: #fff; font-size: 16px; margin-top: 0; margin-bottom: 20px; font-weight: 700;">Dear Agent, did you join our community?</h3>
-                  <div style="display: flex; gap: 16px; width: 100%; justify-content: center;">
-                      <button id="btnQrJoinYes" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 10px 32px; border-radius: 8px; cursor: pointer; font-weight: 800; font-family: inherit; font-size: 14px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s;">Yes</button>
-                      <button id="btnQrJoinNo" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; padding: 10px 32px; border-radius: 8px; cursor: pointer; font-weight: 800; font-family: inherit; font-size: 14px; transition: background 0.2s;">No</button>
-                  </div>
-              </div>
-
-              <!-- State 2: No Response -->
-              <div id="qrPromptNoResponse" style="display: none; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; gap: 20px;">
-              <div style="flex: 1; text-align: left;">
-                  <h3 style="color: #fca5a5; font-size: 15px; margin-top: 0; margin-bottom: 8px; font-weight: 700;">We'd love to have you!</h3>
-                  <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin: 0; font-weight: 500;">Dear Agent, welcome to our community! We are thrilled to have you. Stay tuned to this channel for all the latest updates and announcements.</p>
-                  <button id="btnNoClose" style="margin-top: 16px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; font-family: inherit;">I understand</button>
-              </div>
-              <div style="width: 160px; height: 100px; background: #000; border-radius: 8px; overflow: hidden; border: 2px solid #334155; position: relative; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-                  
-                  <style>
-                      .anim-scale-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.16); width: 300px; height: 600px; }
-                      .anim-phone { width: 100%; height: 100%; background: #111b21; border-radius: 30px; border: 8px solid #334155; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-                      .anim-scene1 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #111b21; display: flex; flex-direction: column; transition: opacity 0.3s; opacity: 1; z-index: 5; }
-                      .anim-wa-topbar { background: #202c33; height: 60px; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; color: white; font-weight: bold; font-size: 20px; }
-                      .anim-wa-icons { display: flex; gap: 15px; font-size: 20px; }
-                      .anim-camera-btn { border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-                      .anim-wa-chats { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 15px; }
-                      .anim-chat-item { display: flex; gap: 12px; align-items: center; }
-                      .anim-chat-avatar { width: 50px; height: 50px; background: #202c33; border-radius: 50%; }
-                      .anim-chat-info { flex: 1; }
-                      .anim-chat-name-line { width: 100px; height: 12px; background: #374045; border-radius: 4px; margin-bottom: 6px; }
-                      .anim-chat-msg { width: 150px; height: 10px; background: #202c33; border-radius: 4px; }
-                      
-                      .anim-scene2 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; transition: opacity 0.3s; opacity: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; pointer-events: none; }
-                      .anim-scanned-qr { width: 180px; height: 180px; background: url('https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=example') center center no-repeat; background-color: white; padding: 5px; border-radius: 8px; filter: blur(3px); opacity: 0.9; }
-                      .anim-camera-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-                      .anim-viewfinder { width: 220px; height: 220px; border-radius: 12px; position: relative; box-shadow: 0 0 0 9999px rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }
-                      .anim-viewfinder::before { content: ''; position: absolute; top: -2px; left: -2px; width: 40px; height: 40px; border-top: 4px solid #00a884; border-left: 4px solid #00a884; border-top-left-radius: 12px; }
-                      .anim-viewfinder::after { content: ''; position: absolute; top: -2px; right: -2px; width: 40px; height: 40px; border-top: 4px solid #00a884; border-right: 4px solid #00a884; border-top-right-radius: 12px; }
-                      .anim-vf-bl { position: absolute; bottom: -2px; left: -2px; width: 40px; height: 40px; border-bottom: 4px solid #00a884; border-left: 4px solid #00a884; border-bottom-left-radius: 12px; }
-                      .anim-vf-br { position: absolute; bottom: -2px; right: -2px; width: 40px; height: 40px; border-bottom: 4px solid #00a884; border-right: 4px solid #00a884; border-bottom-right-radius: 12px; }
-                      .anim-scan-line { width: 100%; height: 3px; background: #00a884; position: absolute; top: 0; box-shadow: 0 0 10px #00a884, 0 0 20px #00a884; animation: animScan 2s linear infinite paused; }
-                      .anim-scan-text { color: white; margin-top: 30px; font-size: 20px; font-weight: bold; z-index: 10; }
-                      
-                      .anim-bottom-sheet { position: absolute; bottom: -250px; left: 0; width: 100%; height: 250px; background: #111b21; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 20; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; padding-top: 15px; }
-                      .anim-sheet-handle { width: 40px; height: 5px; background: #374045; border-radius: 3px; margin-bottom: 15px; }
-                      .anim-sheet-icon { width: 60px; height: 60px; background: #00a884; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; color: white; margin-bottom: 10px; }
-                      .anim-sheet-title { color: #e9edef; font-size: 22px; font-weight: bold; margin: 0 0 5px 0; }
-                      .anim-sheet-subtitle { color: #8696a0; font-size: 16px; margin: 0 0 20px 0; }
-                      .anim-sheet-btn { background: #00a884; color: #111b21; padding: 12px 0; width: 85%; border-radius: 25px; font-weight: bold; font-size: 18px; text-align: center; transition: all 0.2s; }
-                      
-                      .anim-cursor { position: absolute; width: 40px; height: 40px; background: rgba(255,255,255,0.7); border: 3px solid #fff; border-radius: 50%; top: 600px; left: 150px; z-index: 100; transition: all 0.8s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4); pointer-events: none; }
-                      
-                      @keyframes animScan { 0% { top: 0; } 50% { top: 217px; } 100% { top: 0; } }
-                      @keyframes animPulse { 0% { transform: scale(1); } 50% { transform: scale(0.8); background: rgba(255,255,255,1); } 100% { transform: scale(1); } }
-                      @keyframes animFocus { 0% { filter: blur(4px); transform: scale(0.9); } 100% { filter: blur(0px); transform: scale(1); } }
-                  </style>
-
-                  <div class="anim-scale-wrapper">
-                      <div class="anim-phone">
-                          <div class="anim-scene1" id="animScene1">
-                              <div class="anim-wa-topbar">
-                                  <span>WhatsApp</span>
-                                  <div class="anim-wa-icons">
-                                      <div class="anim-camera-btn" id="animCameraBtn">📷</div>
-                                      <div>🔍</div><div>⋮</div>
-                                  </div>
-                              </div>
-                              <div class="anim-wa-chats">
-                                  <div class="anim-chat-item"><div class="anim-chat-avatar"></div><div class="anim-chat-info"><div class="anim-chat-name-line" style="width:120px;"></div><div class="anim-chat-msg"></div></div></div>
-                                  <div class="anim-chat-item"><div class="anim-chat-avatar"></div><div class="anim-chat-info"><div class="anim-chat-name-line" style="width:90px;"></div><div class="anim-chat-msg" style="width:130px;"></div></div></div>
-                                  <div class="anim-chat-item"><div class="anim-chat-avatar"></div><div class="anim-chat-info"><div class="anim-chat-name-line" style="width:140px;"></div><div class="anim-chat-msg" style="width:100px;"></div></div></div>
-                              </div>
-                          </div>
-                          
-                          <div class="anim-scene2" id="animScene2">
-                              <div class="anim-scanned-qr" id="animScannedQr"></div>
-                              <div class="anim-camera-overlay">
-                                  <div class="anim-viewfinder">
-                                      <div class="anim-vf-bl"></div><div class="anim-vf-br"></div>
-                                      <div class="anim-scan-line" id="animScanLine"></div>
-                                  </div>
-                                  <div class="anim-scan-text" id="animScanText">Scan QR code</div>
-                              </div>
-                          </div>
-                          
-                          <div class="anim-bottom-sheet" id="animBottomSheet">
-                              <div class="anim-sheet-handle"></div>
-                              <div class="anim-sheet-icon">👥</div>
-                              <div class="anim-sheet-title">Jana Seva Kendra</div>
-                              <div class="anim-sheet-subtitle">Community • 1,200 members</div>
-                              <div class="anim-sheet-btn" id="animJoinBtn">Join community</div>
-                          </div>
-                          <div class="anim-cursor" id="animCursor"></div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          <!-- State 3: Yes Response -->
-          <div id="qrPromptYesResponse" style="display: none; flex-direction: column; align-items: center; width: 100%;">
-              <div style="font-size: 48px; margin-bottom: 12px; animation: ssp-cel-bounce 2s infinite;">🎉</div>
-              <p style="color: #10b981; font-size: 16px; font-weight: 800; margin: 0; line-height: 1.4;">Thank you so much!, our community, get started on your journey.</p>
-          </div>
-      </div>
-
-      <!-- The Huge QR Code (Right Side) -->
-      <img id="hugeQrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://chat.whatsapp.com/CA4G8EOFRP91heRRxDT3cg" alt="Enlarged QR" style="width: 300px; height: 300px; border-radius: 12px; border: 2px solid #818cf8; box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4); background: #fff; padding: 10px;">
-      
-  </div>
-  
-  <p style="color: #94a3b8; font-size: 13px; margin-top: 20px; cursor: pointer;" id="closeQrModal">Click anywhere to close</p>
-</div>
-
-  <!-- Top Left Status Container (Agent & Wallet) -->
-  <div id="statusContainer" style="position: fixed; top: 20px; left: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; z-index: 10000;">
-      <div id="agentNameBadge" style="cursor: pointer; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #818cf8; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" title="Click to edit Agent Profile">
-            <div style="display: flex; align-items: center; gap: 6px;">
-                <span>👨‍💼</span> <span id="displayAgentName">Agent Name: Loading...</span> <span>✏️</span>
-            </div>
-            <div style="font-size: 9px; color: #a5b4fc; padding-left: 20px; font-weight: 600; text-transform: uppercase;" id="displaySspId">SSP ID: Loading...</div>
-        </div>
-      <div id="walletBox" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.2s ease;">
-          <span style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Wallet Balance:</span>
-          <div style="color: #10b981; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 4px;">
-              <span>🪙</span> <span id="walletPoints">0</span> PTS
-          </div>
-      </div>
-  </div>
-
-  <div class="glass-panel" style="position: relative;">
-
-    <div class="header">
-      <div class="logo-area">
-        <span class="logo-icon">✨</span>
-        <h1>SSP Automation</h1>
-      </div>
-      <span class="subtitle">SCHOLARSHIP MOBILE UPDATE ENGINE</span>
-    </div>
-
-    <!-- Chrome Email Authentication Status -->
-    <div id="chromeAuthStatus"
-        style="font-size: 11px; padding: 10px; margin-bottom: 16px; border-radius: 8px; text-align: center; font-weight: 600; background: rgba(30, 30, 40, 0.8); border: 1px solid rgba(255,255,255,0.05); color: #8c8c9e; transition: all 0.3s ease;">
-        Checking Chrome Profile Authentication...
-    </div>
-
-    <!-- Status -->
-    <div style="margin-bottom: 16px;">
-      <div class="status-box" style="margin-bottom: 0;">
-        <span class="status-label">Engine Status</span>
-        <div id="statusIndicator" class="status-indicator inactive">
-          <span class="status-pulse"></span>
-          <span id="statusText">READY</span>
-        </div>
+      <div class="agent-display">
+        <span>Current Agent</span>
+        <div id="sidebarAgentName">Not Registered</div>
       </div>
     </div>
-
-    <!-- Low Balance Warning -->
-    <div id="lowBalanceWarning" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; color: #f87171; font-size: 12px; font-weight: 600; animation: ssp-cel-pulse 2s infinite;">
-      ⚠️ Please recharge your wallet to continue automation!
-    </div>
-
-    <!-- Configuration Form -->
-    <div class="config-section">
-      <div class="input-group">
-        <label for="studentId">SSP Student ID</label>
-        <div class="input-wrapper">
-          <span class="input-icon">👤</span>
-          <input type="text" id="studentId" placeholder="Enter SSP Student ID">
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label for="mobileNum">New Mobile Number</label>
-        <div class="input-wrapper">
-          <span class="input-icon">📱</span>
-          <input type="tel" id="mobileNum" placeholder="e.g. 9876543210" maxlength="10">
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label for="newPassword">New Password</label>
-        <div class="input-wrapper password-group">
-          <span class="input-icon">🔒</span>
-          <input type="text" id="newPassword" placeholder="Auto-generated or custom">
-          <button id="btnGeneratePass" class="btn-icon" title="Generate Secure Password">⚡</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="control-actions">
-      <button id="btnResetPass" class="btn btn-primary">Start Password Reset</button>
-    </div>
-
-    <!-- Reset Engine State -->
-    <div class="reset-area" style="width: 100%;">
-      <button id="btnBackToJsk" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px; border-color: rgba(100,180,255,0.4); color: #60b0ff; background: rgba(0,100,200,0.08);">← Back to JSK Quick Links</button>
-      <button id="btnResetEngine" class="btn btn-secondary" style="width: 100%;">Reset Engine State</button>
-      <button id="btnExportExcel" style="display: none;"></button>
-    </div>
-
-    <div class="footer">
-      <span>SSPCM V1.2.0 • Premium Control Suite</span>
-    </div>
-
-  </div>
-
-  <!-- One Time Registration Panel -->
-  <div id="registration-panel" style="display: none; width: 100%; max-width: 380px; min-height: 380px; background: #070913; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.07); flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);">
-    <div style="font-size: 32px; margin-bottom: 10px;">🏪</div>
-    <h2 style="color: #fff; font-size: 18px; margin-bottom: 6px; text-align: center;">One-Time Agent Registration</h2>
-    <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-bottom: 24px;">Please enter your details to configure this computer for automation.</p>
-
-    <div class="input-group" style="width: 100%;">
-      <label for="regAgentName" style="color: #94a3b8; font-size: 11px;">Agent Name</label>
-      <input type="text" id="regAgentName" placeholder="Enter Agent Name" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-    </div>
-
-    <div class="input-group" style="width: 100%;">
-      <label for="regAgentId" style="color: #94a3b8; font-size: 11px;">SSP Agent ID</label>
-      <input type="text" id="regAgentId" placeholder="Auto-generated if empty" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-    </div>
-
-    <div class="input-group" style="width: 100%;">
-      <label for="regAgentMob" style="color: #94a3b8; font-size: 11px;">Agent Mobile Number</label>
-      <input type="tel" id="regAgentMob" placeholder="Enter 10-digit number" maxlength="10" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-    </div>
-
-    <div class="input-group" style="width: 100%;">
-      <label for="regAgentEmail" style="color: #94a3b8; font-size: 11px;">Agent Email ID</label>
-      <input type="email" id="regAgentEmail" placeholder="Enter Email Address" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 24px; outline: none; font-size: 13px;">
-    </div>
-
-    <button id="btnSaveRegistration" class="btn btn-emerald" style="width: 100%; padding: 12px; font-size: 14px;">Save & Configure Computer</button>
-  </div>
-
-  <!-- Update Profile Modal -->
-  <div id="updateProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.96); z-index: 3000; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; backdrop-filter: blur(5px);">
-    <div style="width: 100%; max-width: 380px; background: #070913; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; box-sizing: border-box; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);">
-        <div style="font-size: 32px; margin-bottom: 10px; text-align: center;">✏️</div>
-        <h2 style="color: #fff; font-size: 18px; margin-bottom: 24px; text-align: center;">Update Agent Profile</h2>
-        
-        <div class="input-group" style="width: 100%;">
-          <label for="updAgentName" style="color: #94a3b8; font-size: 11px;">Agent Name</label>
-          <input type="text" id="updAgentName" placeholder="Enter Agent Name" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-        </div>
-
-        <div class="input-group" style="width: 100%;">
-          <label for="updAgentId" style="color: #94a3b8; font-size: 11px;">SSP Agent ID</label>
-          <input type="text" id="updAgentId" placeholder="SSP ID" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-        </div>
-
-        <div class="input-group" style="width: 100%;">
-          <label for="updAgentMob" style="color: #94a3b8; font-size: 11px;">Agent Mobile Number</label>
-          <input type="tel" id="updAgentMob" placeholder="Enter 10-digit number" maxlength="10" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
-        </div>
-
-        <div class="input-group" style="width: 100%;">
-          <label for="updAgentEmail" style="color: #94a3b8; font-size: 11px;">Agent Email ID</label>
-          <input type="email" id="updAgentEmail" placeholder="Enter Email Address" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 24px; outline: none; font-size: 13px;">
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-            <button id="btnCancelUpdate" class="btn btn-secondary" style="flex: 1; padding: 12px; font-size: 14px; background: #334155; color: white;">Cancel</button>
-            <button id="btnUpdateData" class="btn btn-emerald" style="flex: 1; padding: 12px; font-size: 14px;">Update Data</button>
-        </div>
-    </div>
-  </div>
-
-  <!-- Custom Popup Modal for SSP ID Inquiry & Entry -->
-  <div id="sspIdModalOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.96); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; backdrop-filter: blur(5px);">
     
-    <!-- Modal 1: Do you have SSP ID? -->
-    <div id="modalInquiry" style="display: flex; width: 100%; max-width: 340px; background: #0d111d; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; box-sizing: border-box; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-      <div style="font-size: 36px; margin-bottom: 12px;">🙋‍♂️</div>
-      <h3 style="color: #fff; font-size: 17px; margin-bottom: 8px; font-weight: 700;">Dear Agent...</h3>
-      <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin-bottom: 24px;">Do you have your SSP Student ID or not?</p>
+    <a href="https://jsk-quick-links-php.vercel.app/#" target="_blank" class="btn-go-back">
+      &larr; Go Back to JSK
+    </a>
+  </div>
+
+  <!-- RIGHT MAIN AREA (DARK MODE) -->
+  <div id="right-main">
+    <div class="glass-panel" id="main-automation-panel" style="position: relative;">
+      <div class="header">
+        <div class="logo-area">
+          <span class="logo-icon">🚀</span>
+          <h1>SSP Automation</h1>
+        </div>
+        <span class="subtitle">SCHOLARSHIP MOBILE UPDATE ENGINE</span>
+      </div>
+
+      <!-- Status & Wallet -->
+      <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+        <div class="status-box" style="flex: 1; margin-bottom: 0;">
+          <span class="status-label">Engine Status</span>
+          <div id="statusIndicator" class="status-indicator inactive">
+            <span class="status-pulse"></span>
+            <span id="statusText">READY</span>
+          </div>
+        </div>
+        <div id="walletBox" style="flex: 1; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px;">Wallet Balance</span>
+          <div style="color: #10b981; font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 4px;">
+            <span>🪙</span> <span id="walletPoints">0</span> PTS
+          </div>
+        </div>
+      </div>
+
+      <!-- Low Balance Warning -->
+      <div id="lowBalanceWarning" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; color: #f87171; font-size: 12px; font-weight: 600; animation: ssp-cel-pulse 2s infinite;">
+        ⚠️ Please recharge your wallet to continue automation!
+      </div>
+
+      <!-- Configuration Form -->
+      <div class="config-section">
+        <div class="input-group">
+          <label for="studentId">SSP Student ID</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🆔</span>
+            <input type="text" id="studentId" placeholder="Enter SSP Student ID">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="mobileNum">New Mobile Number</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="mobileNum" placeholder="e.g. 9876543210" maxlength="10">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="newPassword">New Password</label>
+          <div class="input-wrapper password-group">
+            <span class="input-icon">🔑</span>
+            <input type="text" id="newPassword" placeholder="Auto-generated or custom">
+            <button id="btnGeneratePass" class="btn-icon" title="Generate Secure Password">🎲</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workflow Execution Steps -->
+      <div class="control-actions">
+        <div class="step-card active" id="step1Card">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Reset Password</h3>
+            <p>Initiate password change on SSP Portal</p>
+            <button id="btnResetPass" class="btn btn-primary">Start Password Reset</button>
+          </div>
+        </div>
+
+        <div class="step-card" id="step2Card" style="display: none !important;">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Portal Sign In</h3>
+            <p>Login with new credentials & solve Captcha</p>
+            <button id="btnLoginPortal" class="btn btn-indigo">Go to Login</button>
+          </div>
+        </div>
+
+        <div class="step-card" id="step3Card" style="display: none !important;">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Update Mobile Number</h3>
+            <p>Enter new number, request and verify OTP</p>
+            <button id="btnUpdateMobile" class="btn btn-emerald">Go to Mobile Update</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Engine State -->
+      <div class="reset-area" style="width: 100%;">
+        <button id="btnResetEngine" class="btn btn-secondary" style="width: 100%;">Reset Engine State</button>
+        <button id="btnExportExcel" style="display: none;"></button>
+      </div>
+
+      <div class="footer">
+        <span>SSPCM V1.2.0 • Premium Control Suite</span>
+      </div>
+    </div>
+
+    <!-- One Time Registration Panel -->
+    <div id="registration-panel" style="display: none; width: 100%; min-height: 450px; background: #070913; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.07); flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);">
+      <div style="font-size: 32px; margin-bottom: 10px;">🏪</div>
+      <h2 style="color: #fff; font-size: 18px; margin-bottom: 6px; text-align: center;">One-Time Agent Registration</h2>
+      <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-bottom: 24px;">Please enter your details to configure this computer for automation.</p>
+
+      <div class="input-group" style="width: 100%;">
+        <label for="regAgentName" style="color: #94a3b8; font-size: 11px;">Agent Name (e.g. Jana E Seva Kendra)</label>
+        <input type="text" id="regAgentName" placeholder="Enter Agent Name" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
+      </div>
+
+      <div class="input-group" style="width: 100%;">
+        <label for="regAgentMob" style="color: #94a3b8; font-size: 11px;">Agent Mobile Number</label>
+        <input type="tel" id="regAgentMob" placeholder="Enter 10-digit number" maxlength="10" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none; font-size: 13px;">
+      </div>
+
+      <div class="input-group" style="width: 100%;">
+        <label for="regAgentId" style="color: #94a3b8; font-size: 11px;">Agent ID (e.g. 19200004084)</label>
+        <input type="text" id="regAgentId" placeholder="Enter Agent ID" style="width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 24px; outline: none; font-size: 13px;">
+      </div>
+
+      <button id="btnSaveRegistration" class="btn btn-emerald" style="width: 100%; padding: 12px; font-size: 14px;">Save & Configure Computer</button>
+    </div>
+
+    <!-- Registration Success QR Modal -->
+    <div id="reg-success-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; text-align: center; backdrop-filter: blur(5px);">
+      <div style="font-size: 40px; margin-bottom: 10px; animation: ssp-cel-bounce 2s ease infinite;">🎉</div>
+      <h2 style="color: #10b981; font-size: 20px; margin-bottom: 8px;">Registration Successful!</h2>
+      <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">You've received <b style="color: #38bdf8;">40 Welcome Points</b>.</p>
       
-      <div style="display: flex; gap: 12px; width: 100%;">
-        <button id="btnNoSspId" class="btn btn-secondary" style="flex: 1; padding: 12px; font-size: 12px; font-weight: 700;">Not</button>
-        <button id="btnYesSspId" class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 12px; font-weight: 700;">I Have</button>
+      <div style="background: #fff; padding: 12px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi%3A%2F%2Fpay%3Fpa%3Djanaesevakendra%40upi%26pn%3DJanaSevaKendra%26cu%3DINR" style="width: 150px; height: 150px; display: block;" alt="UPI QR">
       </div>
-    </div>
-
-    <!-- Modal 2: Enter SSP ID -->
-    <div id="modalEntry" style="display: none; width: 100%; max-width: 340px; background: #0d111d; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; box-sizing: border-box; flex-direction: column; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-      <div style="font-size: 36px; margin-bottom: 12px;">🔑</div>
-      <h3 style="color: #fff; font-size: 17px; margin-bottom: 8px; font-weight: 700; text-align: center;">Enter Your SSP ID</h3>
-      <p style="color: #94a3b8; font-size: 11px; text-align: center; margin-bottom: 20px; line-height: 1.4;">Please enter your SSP Student ID to link with registration.</p>
+      <p style="color: #f8fafc; font-size: 11px; margin-bottom: 24px; line-height: 1.5;">Scan this QR later to recharge your wallet.<br>(10 Rupee = 10 Points)</p>
       
-      <div class="input-group" style="width: 100%; margin-bottom: 20px; text-align: left;">
-        <label for="regSspIdInput" style="color: #94a3b8; font-size: 10px; font-weight: 700; text-transform: uppercase;">SSP Student ID</label>
-        <input type="text" id="regSspIdInput" placeholder="e.g. 19200004084" style="width: 100%; padding: 11px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #fff; outline: none; font-size: 13px; font-family: inherit;">
-      </div>
-
-      <div style="display: flex; gap: 12px; width: 100%;">
-        <button id="btnBackToInquiry" class="btn btn-secondary" style="flex: 1; padding: 11px; font-size: 12px; font-weight: 600;">Back</button>
-        <button id="btnConfirmSspId" class="btn btn-emerald" style="flex: 2; padding: 11px; font-size: 12px; font-weight: 700;">Confirm & Save</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Registration Success Modal -->
-  <div id="reg-success-modal" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.95); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; text-align: center; backdrop-filter: blur(5px);">
-    <div style="font-size: 40px; margin-bottom: 10px; animation: ssp-cel-bounce 2s ease infinite;">🎁</div>
-    <h2 style="color: #10b981; font-size: 20px; margin-bottom: 8px;">Registration Successful!</h2>
-    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 24px;">You've received <b style="color: #38bdf8;">40 Welcome Points</b>.</p>
-    
-    <button id="btnContinueToDashboard" class="btn btn-indigo" style="width: 100%; padding: 12px; max-width: 280px;">Continue to Dashboard</button>
-  </div>
-
-  <!-- Email Lock Screen -->
-  <div id="email-lock-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(7, 9, 19, 0.98); z-index: 100000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-    <div class="lock-card" style="text-align: center; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2);">
-      <div style="font-size: 48px; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.5)); margin-bottom: 12px;">🔒</div>
-      <h2 id="lockTitle" style="color: #f87171; margin-bottom: 10px;">Access Denied</h2>
-      <p id="lockMessage" style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">Google Chrome Profile is required.</p>
-      <button id="btnRetryAuth" class="btn btn-primary" style="margin-top: 10px; width: 100%;">Check Status Again</button>
+      <button id="btnContinueToDashboard" class="btn btn-indigo" style="width: 100%; padding: 12px;">Continue to Dashboard</button>
     </div>
   </div>
 
-  <style>
-    @keyframes ssp-cel-bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-  </style>
-
-  <script src="auth_check.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

@@ -167,91 +167,48 @@
     .btn-submit:active {
       transform: translateY(0.5px);
     }
-
-    .back-link {
-      align-self: flex-start;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 15px;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .back-link:hover {
-      color: var(--accent-blue);
-    }
   </style>
 </head>
 <body>
   <div class="payment-card">
-    <!-- Back Link -->
-    <a href="popup.html" class="back-link">← Back to Dashboard</a>
-
     <!-- Header -->
     <div class="header-tag">Secure Payment Gateway</div>
 
     <!-- Title & Subtitle -->
-    <h3 class="title">Recharge Wallet</h3>
-    <p class="subtitle" style="margin-bottom: 15px;">Use PayU or Scan QR to recharge your wallet</p>
+    <h3 class="title">Pay to Continue</h3>
+    <p class="subtitle">Click the button below to pay and start automation</p>
 
-    <!-- Special Offer Banner -->
-    <div style="background: linear-gradient(90deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15)); border: 1px dashed rgba(168, 85, 247, 0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; text-align: center; width: 100%; box-sizing: border-box;">
-      <span style="font-size: 10px; font-weight: 800; color: #f472b6; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 4px;">🎉 Special Offer 🎉</span>
-      <span style="font-size: 12px; font-weight: 700; color: #fff; line-height: 1.4;">Pay <strong style="color: #38bdf8;">₹200 or above</strong> to get <strong style="color: #10b981;">2X POINTS</strong>!</span>
-    </div>
-
-    <!-- Recharge Amount and Points Preview -->
-    <div class="form-group" style="margin-bottom: 12px;">
-      <label for="rechargeAmount">Recharge Amount (₹)</label>
-      <input type="number" id="rechargeAmount" value="100" min="10" placeholder="Enter Amount" style="text-align: center; font-size: 16px; font-weight: bold; border-color: rgba(56, 189, 248, 0.4);">
-      <p id="pointsCalcText" style="font-size: 13px; font-weight: 700; color: #10b981; text-align: center; margin-top: 6px; text-shadow: 0 0 5px rgba(16, 185, 129, 0.3);">
-        Points to get: 100 PTS
-      </p>
-    </div>
-
-    <!-- Dynamic UPI QR Code (for Manual Payment) -->
-    <div style="display: none; background: white; padding: 10px; border-radius: 8px; margin-bottom: 12px; width: 125px; height: 125px; align-items: center; justify-content: center; margin-left: auto; margin-right: auto; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
-      <img id="dynamicQRCode" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=janaesevakendra@upi%26pn=Jana%20Seva%20Kendra%26am=100%26cu=INR" alt="UPI QR" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-    </div>
-    
-    <div style="display: none; font-size: 10px; color: white; font-weight: bold; margin-bottom: 12px; background: rgba(56, 189, 248, 0.08); border: 1px dashed rgba(56, 189, 248, 0.3); padding: 6px; border-radius: 6px; text-align: center; width: 100%;">
-      UPI ID: <span style="color: #38bdf8; user-select: all;">janaesevakendra@upi</span>
+    <!-- QR Code Card Container -->
+    <div class="qr-container">
+      <a href="https://rzp.io/rzp/VNb6ZlQ" target="_blank" style="display: block;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Frzp.io%2Frzp%2FVNb6ZlQ" class="qr-image" alt="Payment QR">
+      </a>
     </div>
 
     <!-- Payment Inputs -->
     <div class="form-group">
-      <label for="studentIdDisp">Agent ID</label>
-      <input type="text" id="studentIdDisp" value="" style="background: rgba(56, 189, 248, 0.08); color: #38bdf8; border-color: rgba(56, 189, 248, 0.25); font-weight: bold; letter-spacing: 0.5px;">
+      <label for="studentIdDisp">SSP Student ID</label>
+      <input type="text" id="studentIdDisp" value="" disabled style="opacity: 0.9; cursor: not-allowed; background: rgba(56, 189, 248, 0.08); color: #38bdf8; border-color: rgba(56, 189, 248, 0.25); font-weight: bold; letter-spacing: 0.5px;">
     </div>
 
-    <div class="form-group" style="display: none;">
+    <div class="form-group">
       <label for="agentId">Agent ID</label>
       <input type="text" id="agentId" value="" disabled style="opacity: 0.7; cursor: not-allowed; background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
     </div>
     <div class="form-group">
       <label for="agentName">Agent Name</label>
-      <input type="text" id="agentName" value="" style="background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
+      <input type="text" id="agentName" value="" disabled style="opacity: 0.7; cursor: not-allowed; background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
     </div>
 
     <div class="form-group">
       <label for="agentMobNo">Agent Mob No</label>
-      <input type="text" id="agentMobNo" value="" style="background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
+      <input type="text" id="agentMobNo" value="" disabled style="opacity: 0.7; cursor: not-allowed; background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
     </div>
 
-    <div class="form-group">
-      <label for="agentEmail">Agent Email ID</label>
-      <input type="text" id="agentEmail" value="" style="background: rgba(255,255,255,0.03); color: #94a3b8; border-color: rgba(255,255,255,0.03);">
-    </div>
 
-    <!-- Submit Payment buttons -->
-    <div style="display: flex; gap: 8px; width: 100%; margin-top: 4px;">
-      <button id="btnSubmitPayment" class="btn-submit" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); flex: 1; padding: 12px 5px; font-size: 11px; margin-top: 0;">Pay Instantly (PayU)</button>
-    </div>
+
+    <!-- Submit Payment button -->
+    <button id="btnSubmitPayment" class="btn-submit">Pay ₹10 & Start Automation</button>
   </div>
 
   <script src="payment.js"></script>
