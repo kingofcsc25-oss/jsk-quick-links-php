@@ -56,9 +56,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ windowId: win.id });
     });
     return true; // Keep channel open for async response
+  } else if (message.action === 'bring_tab_to_front') {
+    if (sender.tab && sender.tab.id) {
+      chrome.tabs.update(sender.tab.id, { active: true });
+      if (sender.tab.windowId) {
+        chrome.windows.update(sender.tab.windowId, { focused: true });
+      }
+    }
   } else if (message.action === 'close_payment_window') {
     if (message.windowId) {
       chrome.windows.remove(message.windowId);
+    }
+  } else if (message.action === 'open_dashboard') {
+    const targetUrl = chrome.runtime.getURL("popup.html");
+    if (sender.tab && sender.tab.id) {
+      chrome.tabs.update(sender.tab.id, { url: targetUrl, active: true });
     }
   }
 });
@@ -69,6 +81,28 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     if (data.sspcm_active && data.ssp_active_tab_id === tabId) {
       chrome.storage.local.set({ sspcm_active: false, ssp_active_tab_id: null });
       console.log("SSP Automation stopped: the tab opened by the extension was closed.");
+    }
+  });
+});
+
+// Open or reuse the SSP portal when the extension icon is clicked and trigger the popup overlay
+chrome.action.onClicked.addListener(() => {
+  const portalUrl = "https://ssp.karnataka.gov.in/";
+
+  chrome.tabs.query({}, (tabs) => {
+    const existingPortal = tabs.find(tab => tab.url && tab.url.includes("ssp.karnataka.gov.in"));
+    if (!existingPortal) {
+      chrome.tabs.create({ url: portalUrl + "?sspcm_ext=true", active: true }, (newTab) => {
+        chrome.storage.local.set({ ssp_active_tab_id: newTab.id });
+      });
+    } else {
+      chrome.storage.local.set({ ssp_active_tab_id: existingPortal.id });
+      let finalUrl = existingPortal.url;
+      if (!finalUrl.includes('sspcm_ext=true')) {
+          finalUrl = finalUrl.includes('?') ? finalUrl + '&sspcm_ext=true' : finalUrl + '?sspcm_ext=true';
+      }
+      chrome.tabs.update(existingPortal.id, { url: finalUrl, active: true });
+      chrome.windows.update(existingPortal.windowId, { focused: true });
     }
   });
 });

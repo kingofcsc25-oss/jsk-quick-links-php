@@ -1,7 +1,84 @@
 // SSPCM Content Script
+
+// --- DASHBOARD DETECTION NODE ---
+(function() {
+    if (document.getElementById('sspcm-extension-active')) return;
+    const detector = document.createElement('div');
+    detector.id = 'sspcm-extension-active';
+    detector.style.display = 'none';
+    if (document.body) {
+        document.body.appendChild(detector);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!document.getElementById('sspcm-extension-active') && document.body) {
+                document.body.appendChild(detector);
+            }
+        });
+    }
+})();
+
+// Check if this is the authorized extension tab
+if (window.location.search.includes('sspcm_ext=true')) {
+    sessionStorage.setItem('sspcm_ext_active', 'true');
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+// Immediate blackout to prevent website flash when popup is expected
+if (sessionStorage.getItem('sspcm_ext_active') === 'true') {
+    const flashBo = document.createElement('div');
+    flashBo.id = 'ssp-popup-flash-prevention';
+    flashBo.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:#090d16;z-index:2147483646;';
+    if (document.documentElement) {
+        document.documentElement.appendChild(flashBo);
+    }
+}
+
+// PayU Callbacks intercepted directly in the active tab!
+(function handlePayUCallbacks() {
+  if (window.location.href.includes('dl-payu-success')) {
+    chrome.storage.local.get([
+      'pending_payu_amount',
+      'ssp_wallet_balance',
+      'ssp_agent_name',
+      'ssp_agent_mob',
+      'ssp_agent_id',
+      'ssp_student_id',
+      'pending_payu_txnid'
+    ], (res) => {
+      const amount = parseFloat(res.pending_payu_amount) || 0;
+      let pointsToAdd = amount;
+      
+      if (amount >= 200) {
+        pointsToAdd = amount * 2;
+      }
+      
+      const currentBal = res.ssp_wallet_balance || 0;
+      const newBal = currentBal + pointsToAdd;
+      
+      const googleSheetAppScriptUrl = "https://script.google.com/macros/s/AKfycbyyIKQOt7qqdw-LbCiXr_9wet7YVa9P_8OfLybKZm1bQTP7gq8f9zUNByji7z5Csftk/exec";
+      const timestamp = new Date().toLocaleString();
+      const syncUrl = `${googleSheetAppScriptUrl}?timestamp=${encodeURIComponent(timestamp)}&agentId=${encodeURIComponent(res.ssp_agent_id || "")}&studentId=${encodeURIComponent(res.ssp_student_id || "Recharge")}&newMobile=Recharge&utr=${encodeURIComponent(res.pending_payu_txnid || "PAYU_UNKNOWN")}&mobile=${encodeURIComponent(res.ssp_agent_mob || "")}`;
+      
+      fetch(syncUrl, { method: 'GET', mode: 'no-cors' })
+        .then(() => console.log("Google Sheets sync successful."))
+        .catch(e => console.log("Google Sheets Sync Error:", e));
+        
+      chrome.storage.local.set({
+        'ssp_wallet_balance': newBal,
+        'pending_payu_amount': 0
+      }, () => {
+        chrome.runtime.sendMessage({ action: 'open_dashboard' });
+      });
+    });
+  } else if (window.location.href.includes('dl-payu-failure')) {
+    alert("Your PayU transaction failed or was cancelled.");
+    chrome.runtime.sendMessage({ action: 'open_dashboard' });
+  }
+}());
+
 let GLOBAL_AGENT_ID = '';
 let GLOBAL_AGENT_NAME = '';
-if (window.location.hostname.includes('ssp.postmatric.karnataka.gov.in') || window.location.hostname.includes('ssp.prematric.karnataka.gov.in') || window.location.hostname.includes('ssp.karnataka.gov.in')) {
+if (window.location.hostname.includes('karnataka.gov.in')) {
   // Immediate blackout if active
   chrome.storage.local.get(['sspcm_active'], (d) => {
     if (d.sspcm_active) {
@@ -37,8 +114,51 @@ if (window.location.hostname.includes('ssp.postmatric.karnataka.gov.in') || wind
       if (!data.sspcm_active) {
         const bo = document.getElementById('ssp-global-blackout');
         if (bo) bo.remove();
+        if (sessionStorage.getItem('sspcm_ext_active') === 'true') {
+            showExtensionUIIframe();
+        }
         return;
       }
+
+      function showExtensionUIIframe() {
+          if (window !== window.top) return;
+          if (document.getElementById('sspcm-extension-ui-overlay')) return;
+
+          let overlay = document.createElement('div');
+          overlay.id = 'sspcm-extension-ui-overlay';
+          overlay.style.cssText = [
+              'position:fixed',
+              'top:0',
+              'left:0',
+              'width:100vw',
+              'height:100vh',
+              'z-index:2147483647',
+              'display:flex',
+              'align-items:center',
+              'justify-content:center',
+              'background-color:rgba(9, 13, 22, 0.85)',
+              'backdrop-filter:blur(8px)'
+          ].join(';');
+
+          let iframe = document.createElement('iframe');
+          iframe.src = chrome.runtime.getURL('popup.html');
+          iframe.style.cssText = 'width:100%;height:100%;border:none;background:transparent;display:block;';
+
+          overlay.appendChild(iframe);
+          document.documentElement.appendChild(overlay);
+
+          overlay.addEventListener('click', (e) => {
+              if (e.target === overlay) {
+                  overlay.remove();
+                  sessionStorage.removeItem('sspcm_ext_active');
+                  const flashBo = document.getElementById('ssp-popup-flash-prevention');
+                  if (flashBo) flashBo.remove();
+              }
+          });
+      }
+
+      // Inject credentials helper overlay at the bottom-left corner
+      injectCredentialsHelper(data.ssp_student_id, data.ssp_new_password);
 
       // ── PAYMENT MODAL CHECK ───────────────────────────────────────────────
       if (data.ssp_pending_payment) {
@@ -119,8 +239,6 @@ if (window.location.hostname.includes('ssp.postmatric.karnataka.gov.in') || wind
           initSspSignIn();
         } else if (url.includes('student_update_mobileno')) {
           initSspUpdateMobile();
-        } else if (url === 'https://ssp.karnataka.gov.in/' || url.includes('sspcm_ext=true') || url.includes('ssp.karnataka.gov.in')) {
-          window.location.href = 'https://ssp.postmatric.karnataka.gov.in/post_sa/signin.aspx';
         } else if (document.body.innerText.includes('Logout') || document.querySelector('input[value*="Logout" i], button[value*="Logout" i], a[href*="Logout" i], [id*="logout" i]')) {
           // Step: On home page — extract student name, show promo, then redirect
           console.log('SSP - On home page. Extracting student name...');
@@ -181,6 +299,120 @@ if (window.location.hostname.includes('ssp.postmatric.karnataka.gov.in') || wind
           }, 2000);
         }
       }, 1000);
+    });
+  });
+}
+
+// ── Credentials Helper Overlay ───────────────────────────────────────────────
+function injectCredentialsHelper(studentId, password) {
+  if (document.getElementById('ssp-credentials-helper')) return;
+
+  const helper = document.createElement('div');
+  helper.id = 'ssp-credentials-helper';
+  helper.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 12px 16px;
+    color: #f8fafc;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 13px;
+    z-index: 10000000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 240px;
+    animation: ssp-helper-slidein 0.3s ease-out;
+  `;
+
+  helper.innerHTML = `
+    <style>
+      @keyframes ssp-helper-slidein {
+        from { transform: translateX(-30px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      .ssp-helper-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .ssp-helper-label {
+        color: #94a3b8;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .ssp-helper-val {
+        font-family: monospace;
+        font-weight: 700;
+        color: #f8fafc;
+        font-size: 13px;
+      }
+      .ssp-helper-copy {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #38bdf8;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+      .ssp-helper-copy:hover {
+        background: #38bdf8;
+        color: #0f172a;
+        border-color: transparent;
+      }
+    </style>
+    <div style="font-weight: 800; font-size: 11px; color: #a855f7; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 2px;">
+      🔑 SSP Credentials Helper
+    </div>
+    <div class="ssp-helper-row">
+      <span class="ssp-helper-label">User ID:</span>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span class="ssp-helper-val">${studentId || 'N/A'}</span>
+        <button class="ssp-helper-copy" data-copy="${studentId || ''}">Copy</button>
+      </div>
+    </div>
+    <div class="ssp-helper-row">
+      <span class="ssp-helper-label">Password:</span>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span class="ssp-helper-val" style="color: #fbbf24;">${password || 'N/A'}</span>
+        <button class="ssp-helper-copy" data-copy="${password || ''}">Copy</button>
+      </div>
+    </div>
+  `;
+
+  if (document.body) {
+    document.body.appendChild(helper);
+  }
+
+  // Add click handlers for copy buttons
+  helper.querySelectorAll('.ssp-helper-copy').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const textToCopy = e.target.getAttribute('data-copy');
+      if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalText = e.target.innerText;
+          e.target.innerText = 'Copied!';
+          e.target.style.background = '#10b981';
+          e.target.style.color = '#fff';
+          setTimeout(() => {
+            e.target.innerText = originalText;
+            e.target.style.background = '';
+            e.target.style.color = '';
+          }, 1500);
+        });
+      }
     });
   });
 }
@@ -252,17 +484,26 @@ function showSspCelebrationOverlay(sspId, mobileNo, studentName, password) {
   if (window._ssp_celebration_shown) return;
   window._ssp_celebration_shown = true;
 
-  // Deduct 20 Points for successful mobile link
-  try {
-    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
-      chrome.storage.local.get(['ssp_wallet_balance'], (wData) => {
-        let currentBal = wData.ssp_wallet_balance || 0;
-        chrome.storage.local.set({ ssp_wallet_balance: Math.max(0, currentBal - 20) });
+  if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
+    chrome.storage.local.get(['ssp_wallet_balance', 'ssp_task_type', 'ssp_points_debited'], (res) => {
+      if (res.ssp_points_debited) return; // Already debited!
+
+      const taskType = res.ssp_task_type || 'mobile_update';
+      const cost = (taskType === 'password_reset') ? 10 : 20;
+
+      const currentBal = res.ssp_wallet_balance || 0;
+      const newBal = Math.max(0, currentBal - cost);
+
+      chrome.storage.local.set({
+        ssp_wallet_balance: newBal,
+        ssp_points_debited: true
+      }, () => {
+        console.log(`[SSPCM] Successfully debited ${cost} points. New balance: ${newBal}`);
       });
-    }
-  } catch(e) {
-    console.log("SSP - Points deduction error:", e);
+    });
   }
+
+
 
   if (!document.getElementById('ssp-font-link')) {
     const link = document.createElement('link');
@@ -386,7 +627,7 @@ function showSspCelebrationOverlay(sspId, mobileNo, studentName, password) {
             'ssp_student_id', 'ssp_new_mobile', 'ssp_new_password',
             'ssp_student_name', 'ssp_pwd_step', 'ssp_mobile_step',
             'sspcm_active', 'ssp_show_celebration', 'ssp_show_otp_modal',
-            'ssp_show_mobile_otp_modal'
+            'ssp_show_mobile_otp_modal', 'ssp_task_type', 'ssp_points_debited'
           ], () => {
             try {
               if (chrome.runtime && chrome.runtime.id) {
@@ -2508,6 +2749,148 @@ function initSspUpdateMobile() {
   }
 }
 
+// --- KNOW YOUR STUDENT ID AUTOMATION ---
+function handleKnowYourStudentIdAutomation() {
+  chrome.storage.local.get(["ssp_aadhaar_lookup", "ssp_aadhaar_num", "ssp_aadhaar_name", "ssp_aadhaar_mobile", "ssp_agent_email_temp"], (d) => {
+    if (!d.ssp_aadhaar_lookup || !d.ssp_aadhaar_num) return;
+
+    const url = window.location.href.toLowerCase();
+    
+    // Check if we are on the correct page
+    if (url.includes("know_your_student_id.aspx")) {
+      
+      // Step 1: Check if there's a result or an error message on the screen
+      const errorElements = Array.from(document.querySelectorAll("span, div, label, td")).filter(el => {
+        const text = el.innerText.toLowerCase();
+        return text.includes("no details found") || text.includes("not found") || text.includes("no records");
+      });
+
+      // Are there any SSP ID results?
+      const possibleIdLabel = Array.from(document.querySelectorAll("td, th, span, label, div")).find(el => 
+        el.innerText.toLowerCase().includes("ssp student id") || el.innerText.toLowerCase().includes("ssp id")
+      );
+      
+      if (possibleIdLabel) {
+        // We found an ID label! Extract ID and Name from inputs on the page
+        let extractedId = "";
+        let extractedName = "";
+        
+        const allTextInputs = document.querySelectorAll("input[type='text'], input:not([type]), input[readonly]");
+        allTextInputs.forEach(inp => {
+            const val = (inp.value || "").trim();
+            if (/^\\d{9,}$/.test(val)) extractedId = val;
+            else if (val && val.length > 2 && /[a-zA-Z]/.test(val) && !val.toLowerCase().includes("aadhaar")) extractedName = val;
+        });
+
+        if (extractedId) {
+            chrome.storage.local.get(["ssp_aadhaar_mobile", "ssp_agent_email_temp"], (st) => {
+                chrome.storage.local.set({
+                    ssp_agent_id: extractedId,
+                    ssp_agent_name: extractedName || "",
+                    ssp_agent_mob: st.ssp_aadhaar_mobile || "",
+                    ssp_agent_email: st.ssp_agent_email_temp || "",
+                    ssp_aadhaar_lookup: false,
+                    sspcm_active: false
+                }, () => {
+                    chrome.runtime.sendMessage({ action: 'close_tab' });
+                });
+            });
+            return;
+        }
+      }
+
+      if (errorElements.length > 0) {
+        // No ID found, prompt the dashboard!
+        chrome.storage.local.set({ 
+            ssp_aadhaar_lookup: false,
+            ssp_prompt_create_id: true 
+        }, () => {
+            // Start listening for dashboard's answer
+            chrome.storage.onChanged.addListener(function promptListener(changes) {
+                if (changes.ssp_proceed_create_id && changes.ssp_proceed_create_id.newValue === true) {
+                    chrome.storage.local.remove('ssp_proceed_create_id');
+                    chrome.storage.onChanged.removeListener(promptListener);
+                    chrome.runtime.sendMessage({ action: 'bring_tab_to_front' });
+                    window.location.href = "https://ssp.postmatric.karnataka.gov.in/CA/CreateAccount.aspx";
+                }
+                if (changes.ssp_cancel_create_id && changes.ssp_cancel_create_id.newValue === true) {
+                    chrome.storage.local.remove('ssp_cancel_create_id');
+                    chrome.storage.onChanged.removeListener(promptListener);
+                    chrome.runtime.sendMessage({ action: 'close_tab' });
+                }
+            });
+        });
+        return;
+      }
+
+      // Step 2: If we haven't searched yet, enter the Aadhaar and search
+      let aadhaarInput = document.querySelector("input[id*='Aadhaar' i], input[name*='Aadhaar' i], input[placeholder*='Aadhaar' i]");
+      if (!aadhaarInput) {
+        // Fallback: get the last text-like input on the page
+        const textInputs = Array.from(document.querySelectorAll("input:not([type='hidden']):not([type='submit']):not([type='button'])"));
+        if (textInputs.length > 0) aadhaarInput = textInputs[textInputs.length - 1];
+      }
+      
+      const searchBtn = Array.from(document.querySelectorAll("input[type='submit'], button")).find(el => (el.value || el.innerText).toUpperCase().includes("STUDENT ID") || (el.value || el.innerText).toUpperCase().includes("SEARCH") || (el.value || el.innerText).toUpperCase().includes("GET") || (el.value || el.innerText).toUpperCase().includes("KNOW"));
+      
+      if (aadhaarInput && searchBtn && !aadhaarInput.value) {
+        aadhaarInput.value = d.ssp_aadhaar_num;
+        setTimeout(() => searchBtn.click(), 500);
+      }
+    }
+  });
+}
+
+// --- SSP ACCOUNT CREATION AUTOMATION (CA) ---
+function handleAccountCreationAutomation() {
+  chrome.storage.local.get([
+    "ssp_aadhaar_num", 
+    "ssp_aadhaar_name", 
+    "ssp_aadhaar_mobile"
+  ], (d) => {
+    if (!d.ssp_aadhaar_num) return; // Not in automation flow
+    
+    const url = window.location.href.toLowerCase();
+    
+    // Automate /CA/ (Initial Aadhaar Entry)
+    if (url.includes("/ca/") && !url.includes("createaccount.aspx")) {
+      const aadhaarInput = document.querySelector("input[type='text'], input[placeholder*='Aadhaar']");
+      const proceedBtn = Array.from(document.querySelectorAll("input[type='submit'], button")).find(el => (el.value || el.innerText).toUpperCase().includes("PROCEED"));
+      
+      if (aadhaarInput && proceedBtn && !aadhaarInput.value) {
+        aadhaarInput.value = d.ssp_aadhaar_num;
+        setTimeout(() => proceedBtn.click(), 500);
+      }
+      return;
+    }
+    
+    // Automate dbt.karnataka.gov.in (Consent Page)
+    if (url.includes("dbt.karnataka.gov.in")) {
+      const inputs = document.querySelectorAll("input[type='text']");
+      const checkbox = document.querySelector("input[type='checkbox']");
+      const submitBtn = Array.from(document.querySelectorAll("button, input[type='submit']")).find(el => (el.value || el.innerText).toUpperCase().includes("SUBMIT") || (el.value || el.innerText).includes("ಸಲ್ಲಿಸಿ"));
+      
+      if (inputs.length >= 2 && checkbox && submitBtn) {
+        if (!inputs[0].value) inputs[0].value = d.ssp_aadhaar_name;
+        if (!inputs[1].value) inputs[1].value = d.ssp_aadhaar_num;
+        if (!checkbox.checked) checkbox.click();
+        
+        setTimeout(() => submitBtn.click(), 1000);
+      }
+      return;
+    }
+  });
+}
+
+window.addEventListener("load", () => {
+  if (window.location.href.toLowerCase().includes("/ca/") || window.location.href.toLowerCase().includes("dbt.karnataka.gov.in")) {
+    setTimeout(handleAccountCreationAutomation, 1500);
+  }
+  if (window.location.href.toLowerCase().includes("know_your_student_id.aspx")) {
+    setTimeout(handleKnowYourStudentIdAutomation, 1500);
+  }
+});
+
 // --- Developer Tools Security Anti-Debugging ---
 // Only run on SSP pages, not on all karnataka.gov.in sites
 if (window.location.hostname.includes('ssp.postmatric.karnataka.gov.in') || window.location.hostname.includes('ssp.prematric.karnataka.gov.in') || window.location.hostname.includes('ssp.karnataka.gov.in')) {
@@ -2622,6 +3005,3 @@ setInterval(() => {
         }
     }
 }, 1000);
-
-const initDiv = document.createElement("div"); initDiv.id = "sspcm-extension-active"; initDiv.style.display = "none"; if (document.body) document.body.appendChild(initDiv); else document.addEventListener("DOMContentLoaded", () => { if (!document.getElementById("sspcm-extension-active")) document.body.appendChild(initDiv); });
-setInterval(() => { if (!document.getElementById("sspcm-extension-active")) { const activeDiv = document.createElement("div"); activeDiv.id = "sspcm-extension-active"; activeDiv.style.display = "none"; if (document.body) document.body.appendChild(activeDiv); else document.addEventListener("DOMContentLoaded", () => { if (!document.getElementById("sspcm-extension-active")) document.body.appendChild(activeDiv); }); } }, 1000);

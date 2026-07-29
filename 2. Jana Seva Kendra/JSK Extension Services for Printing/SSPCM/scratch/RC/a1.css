@@ -1,0 +1,98 @@
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3) {
+    border: 1px solid #f5a9a9;
+    padding: 0px;
+    background-color: #f5a9a9;
+    height: 100% !important;
+    min-height: 566.93px !important;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1) {
+    background-color: #fa5758;
+    border-radius: 0px 0px 20px 20px;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(3)>td:nth-child(1)>table:nth-child(1) {
+    border-top: 1px solid #716b83;
+    border-bottom: 1px solid #716b83;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(7)>td:nth-child(1) {
+    border-top: 1px solid #716b83;
+    border-bottom: 1px solid #716b83;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(4) {
+    background-color: #fff;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(5) {
+    background-color: #fff;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1) {
+    border: 1px solid #f5a9a9;
+    padding: 5px;
+    height: 100% !important;
+    min-height: 566.93px !important;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1) {
+    border: 5px double #f5a9a9;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1) {
+
+    background-color: #f5a9a9;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2) {
+    width: 47.79px;
+    height: 100% !important;
+    min-height: 566.93px !important;
+}
+
+#lblPhNo {
+    font-size: 12px !important;
+}
+
+#lblRCNoPRC {
+    font-weight: bold;
+}
+
+#Table1 {
+    margin-top: 40px;
+    background-color: #f5a9a9;
+    color: #000;
+    border-radius: 20px 20px 0px 0px;
+}
+
+/*white color text*/
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>span:nth-child(1) {
+
+    color: white;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>span:nth-child(1) {
+
+    color: white;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>span:nth-child(3) {
+
+    color: aliceblue;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(2)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>span:nth-child(1) {
+
+    color: white;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(2)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>span:nth-child(3) {
+
+    color: white;
+}
+
+#tblRCard>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(1)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(3)>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(2)>td:nth-child(1)>table:nth-child(1) {
+
+    text-align: center !important;
+}

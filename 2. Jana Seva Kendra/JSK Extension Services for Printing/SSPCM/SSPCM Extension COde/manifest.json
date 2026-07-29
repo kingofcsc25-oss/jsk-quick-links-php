@@ -3,7 +3,7 @@
   "name": "SSPCM",
   "version": "1.0",
   "action": {
-    "default_popup": "popup.html"
+    "default_title": "Open SSPCM Control Panel"
   },
   "background": {
     "service_worker": "background.js"
@@ -16,10 +16,8 @@
         "*://ssp.karnataka.gov.in/*",
         "*://*.karnataka.gov.in/*",
         "http://localhost/*",
-        "http://localhost:8080/*",
-        "http://127.0.0.1/*",
-        "http://127.0.0.1:8080/*",
-        "*://*.vercel.app/*"
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*"
       ],
       "js": ["content.js"],
       "all_frames": true,
@@ -29,12 +27,19 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "identity",
+    "identity.email"
   ],
   "web_accessible_resources": [
     {
-      "resources": ["alert_override.js"],
-      "matches": ["*://*.karnataka.gov.in/*"]
+      "resources": ["alert_override.js", "payu_checkout.html", "payu_checkout.js", "popup.html", "popup.css", "popup.js"],
+      "matches": [
+        "*://*.karnataka.gov.in/*",
+        "http://localhost/*",
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*"
+      ]
     }
   ]
 }
